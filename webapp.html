@@ -8455,6 +8455,7 @@
                     id: productId,
                     name: level2Value,  // Используем level_2 вместо name (sku)
                     level_2: level2Value,
+                    level_0: product.level_0 || null,
                     image: product.image || (product.images && product.images[0] ? product.images[0] : ''),
                     price: product.price,
                     color: product.selectedColor || '',
@@ -9000,14 +9001,19 @@
                 // Получаем ID товаров, которые уже в корзине
                 const cartProductIds = new Set(cart.map(item => item.id));
                 const cartLevel2s = new Set(cart.map(item => item.level_2).filter(Boolean));
+                // Получаем категории товаров, которые уже в корзине
+                const cartLevel0s = new Set(cart.map(item => item.level_0).filter(Boolean));
                 
-                // Фильтруем товары: исключаем те, что уже в корзине (по ID и по level_2)
+                // Фильтруем товары: исключаем те, что уже в корзине (по ID, по level_2 и по level_0)
                 const availableProducts = allProducts.filter(product => {
                     // Исключаем товары с теми же ID
                     if (cartProductIds.has(product.id)) return false;
                     
                     // Исключаем товары с теми же level_2 (моделями)
                     if (product.level_2 && cartLevel2s.has(product.level_2)) return false;
+                    
+                    // Исключаем товары из тех же категорий (level_0)
+                    if (product.level_0 && cartLevel0s.has(product.level_0)) return false;
                     
                     // Показываем только товары с ценой
                     if (!product.price || product.price <= 0) return false;
@@ -9305,6 +9311,7 @@
                     id: productId,
                     name: productName,
                     level_2: level2 || product.level_2 || product.model || productName,
+                    level_0: product.level_0 || null,
                     image: imageUrl,
                     price: price,
                     selectedColor: variants.color || '',
@@ -9608,6 +9615,7 @@
                 const productData = {
                     id: product.id,
                     level_2: level2Value,
+                    level_0: product.level_0 || null,
                     name: product.name,
                     image: productImage,
                     price: currentPrice,

@@ -124,6 +124,7 @@ class ProductResponse(BaseModel):
     brand: str
     model: str
     category_name: str
+    level_0: Optional[str] = None  # Категория верхнего уровня (например "Смартфоны", "Ноутбуки")
     level_2: Optional[str] = None  # Название группы товаров (например "iPhone 16 Pro Max")
     image_url: str
     images: List[str] = []  # Массив изображений
@@ -160,6 +161,7 @@ class ProductDetailResponse(BaseModel):
     brand: str
     model: str
     category_name: str
+    level_0: Optional[str] = None  # Категория верхнего уровня (например "Смартфоны", "Ноутбуки")
     image_url: str
     images: List[str] = []  # Массив изображений
     specifications: dict
@@ -296,6 +298,7 @@ async def get_all_products(db: Session = Depends(get_db)):
                 brand=product.brand,
                 model=product.level_2 or "",
                 category_name=f"{product.level_0} / {product.level_1} / {product.level_2}" if product.level_1 and product.level_2 else product.level_0,
+                level_0=product.level_0,
                 level_2=product.level_2,
                 image_url=image_url,
                 images=images,
@@ -453,6 +456,7 @@ async def get_products(
             brand=product.brand,
             model=product.level_2 or "",
             category_name=category_name,
+            level_0=product.level_0,
             level_2=product.level_2,
             image_url=images[0] if images else '',
             images=images,
@@ -648,6 +652,7 @@ async def get_product(product_id: int, db: Session = Depends(get_db)):
         brand=product.brand,
         model=product.level_2 or "",
         category_name=product.level_0 or "Без категории",
+        level_0=product.level_0,
         image_url=images[0] if images else '',
         images=images,
         specifications=all_specifications,
@@ -787,6 +792,7 @@ async def search_products(
             brand=product.brand,
             model=product.level_2 or "",
             category_name=category_name,
+            level_0=product.level_0,
             level_2=product.level_2,
             image_url=images[0] if images else '',
             images=images,
