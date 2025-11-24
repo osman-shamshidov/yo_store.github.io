@@ -269,7 +269,7 @@
         .header-main {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: flex-start;
             gap: 15px;
         }
         
@@ -312,6 +312,7 @@
             justify-content: center;
             width: 40px;
             height: 40px;
+            margin-left: auto;
         }
         
         .cart-icon-btn-header:hover {
@@ -631,6 +632,35 @@
             color: #6b7280; /* slate-500 */
         }
         .search-icon-btn:hover { color: #2d6cdf; background: #f3f4f6; }
+        
+        .quick-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .quick-menu.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        
+        .quick-menu-item {
+            font-size: 1rem;
+            color: #4b5563;
+            text-decoration: none;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        
+        .quick-menu-item:hover {
+            background: #f3f4f6;
+            color: #2d6cdf;
+        }
         
         .promo-banners-container {
             display: grid;
@@ -1403,10 +1433,7 @@
         .breadcrumbs {
             margin: 8px 0 12px 0;
             padding: 6px 12px;
-            background: white;
-            border-radius: 4px;
-            border: 1px solid #e9ecef;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+            background: transparent;
         }
         
         .breadcrumb-trail {
@@ -1414,7 +1441,7 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 4px;
-            font-size: 11px;
+            font-size: 13px;
             color: #6c757d;
             opacity: 0.8;
         }
@@ -1431,7 +1458,7 @@
             padding: 2px 4px;
             border-radius: 2px;
             transition: all 0.2s ease;
-            font-size: 11px;
+            font-size: 13px;
         }
         
         .breadcrumb-link:hover {
@@ -1446,13 +1473,13 @@
             padding: 2px 4px;
             background: transparent;
             border-radius: 2px;
-            font-size: 11px;
+            font-size: 13px;
         }
         
         .breadcrumb-separator {
             color: #adb5bd;
             margin: 0 2px;
-            font-size: 10px;
+            font-size: 12px;
             opacity: 0.6;
         }
         
@@ -1475,6 +1502,26 @@
             margin: 8px 0 0 0;
             opacity: 0.9;
             font-size: 1rem;
+        }
+        
+        .category-welcome {
+            text-align: center;
+            margin: 16px 0 20px 0;
+            padding: 0;
+        }
+        
+        .category-welcome-title {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .category-welcome-subtitle {
+            margin: 8px 0 0 0;
+            font-size: 1rem;
+            color: #666;
+            opacity: 0.9;
         }
         
         .subcategories-grid {
@@ -2104,11 +2151,11 @@
         /* Стили для иерархических фильтров */
         .hierarchy-filters {
             margin: 12px 0;
-            padding: 12px 16px;
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-            border-radius: 12px;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.08);
+            padding: 8px 12px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(248, 249, 250, 0.7) 100%);
+            border-radius: 8px;
+            border: 1px solid rgba(229, 231, 235, 0.6);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02), 0 1px 3px rgba(0, 0, 0, 0.04);
         }
         
         .hierarchy-filter-section {
@@ -3770,6 +3817,17 @@
                         </svg>
                     </button>
                 </div>
+                <div class="quick-menu" id="quickMenu">
+                    <a href="#" class="quick-menu-item" onclick="loadProductsByBrand('Apple', 'Смартфоны'); return false;">iPhone</a>
+                    <a href="#" class="quick-menu-item" onclick="loadProductsByBrand('Apple', 'Ноутбуки'); return false;">MacBook</a>
+                    <a href="#" class="quick-menu-item" onclick="searchProducts('AirPods'); return false;">AirPods</a>
+                    <a href="#" class="quick-menu-item" onclick="searchProducts('iPad'); return false;">iPad</a>
+                    <a href="#" class="quick-menu-item" onclick="searchProducts('Apple Watch'); return false;">Apple Watch</a>
+                    <a href="#" class="quick-menu-item" onclick="searchProducts('Galaxy'); return false;">Galaxy</a>
+                    <a href="#" class="quick-menu-item" onclick="searchProducts('Whoop'); return false;">Whoop</a>
+                    <a href="#" class="quick-menu-item" onclick="searchProducts('Dyson'); return false;">Dyson</a>
+                    <a href="#" class="quick-menu-item" onclick="loadProductsByBrand('Sony', 'Игровые приставки'); return false;">Playstation</a>
+                </div>
                 <button class="cart-icon-btn-header" onclick="openCart()" aria-label="Корзина">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
@@ -4561,6 +4619,8 @@
         function setupSearch() {
             const searchInput = document.getElementById('searchInput');
             const searchInputMobile = document.getElementById('searchInputMobile');
+            const searchBar = document.querySelector('.search-bar');
+            const searchBarMobile = document.querySelector('.search-bar-mobile');
             let searchTimeout;
             
             function handleSearch(value) {
@@ -4580,12 +4640,14 @@
                 }, 500);
             }
             
+            // Desktop search bar
             if (searchInput) {
                 searchInput.addEventListener('input', function() {
                     handleSearch(this.value);
                 });
             }
             
+            // Mobile search bar
             if (searchInputMobile) {
                 searchInputMobile.addEventListener('input', function() {
                     handleSearch(this.value);
@@ -5598,6 +5660,63 @@
             }
         }
         
+        // Get welcome text for category-brand combination
+        function getCategoryBrandWelcome(categoryLevel0, brand) {
+            const welcomeTexts = {
+                'Смартфоны': {
+                    'Apple': {
+                        title: 'iPhone',
+                        subtitle: 'Изысканные технологии в каждой детали.'
+                    },
+                    'Samsung': {
+                        title: 'Galaxy',
+                        subtitle: 'Инновации, которые меняют мир.'
+                    },
+                    'Xiaomi': {
+                        title: 'Xiaomi',
+                        subtitle: 'Высокое качество по доступной цене.'
+                    }
+                },
+                'Ноутбуки': {
+                    'Apple': {
+                        title: 'MacBook',
+                        subtitle: 'Мощность и элегантность в одном устройстве.'
+                    },
+                    'Samsung': {
+                        title: 'Galaxy Book',
+                        subtitle: 'Производительность для работы и творчества.'
+                    }
+                },
+                'Планшеты': {
+                    'Apple': {
+                        title: 'iPad',
+                        subtitle: 'Творчество и продуктивность в ваших руках.'
+                    }
+                },
+                'Наушники': {
+                    'Apple': {
+                        title: 'AirPods',
+                        subtitle: 'Звук нового поколения.'
+                    },
+                    'Sony': {
+                        title: 'Sony',
+                        subtitle: 'Превосходное качество звука.'
+                    }
+                }
+            };
+            
+            const category = welcomeTexts[categoryLevel0];
+            if (category && category[brand]) {
+                return category[brand];
+            }
+            
+            // Default welcome text if not found
+            return {
+                title: brand,
+                subtitle: 'Качественная техника для вашего комфорта.'
+            };
+        }
+        
         // Load products by brand with hierarchical filters
         async function loadProductsByBrand(brand, categoryLevel0) {
             try {
@@ -5629,10 +5748,16 @@
                     console.log(`📋 Первый товар: ${products[0].name} (level0: ${products[0].level0})`);
                 }
                 
+                const welcome = getCategoryBrandWelcome(categoryLevel0, brand);
+                
                 const content = document.getElementById('content');
                 content.innerHTML = `
                     <div class="breadcrumbs" id="breadcrumbsContainer">
                         ${createBreadcrumbs(brand)}
+                    </div>
+                    <div class="category-welcome">
+                        <h2 class="category-welcome-title">${welcome.title}</h2>
+                        <div class="category-welcome-subtitle">${welcome.subtitle}</div>
                     </div>
                     <div class="hierarchy-filters" id="hierarchyFilters">
                         <!-- Фильтры будут добавлены динамически -->
@@ -5858,10 +5983,16 @@
                 
                 currentView = 'brand_products';
                 
+                const welcome = getCategoryBrandWelcome(level0, brand);
+                
                 const content = document.getElementById('content');
                 content.innerHTML = `
                     <div class="breadcrumbs" id="breadcrumbsContainer">
                         ${createBreadcrumbs(brand)}
+                    </div>
+                    <div class="category-welcome">
+                        <h2 class="category-welcome-title">${welcome.title}</h2>
+                        <div class="category-welcome-subtitle">${welcome.subtitle}</div>
                     </div>
                     <div class="hierarchy-filters" id="hierarchyFilters">
                         <!-- Фильтры будут добавлены динамически -->
