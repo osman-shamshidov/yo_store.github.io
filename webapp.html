@@ -6971,8 +6971,36 @@
                 console.log(`🔗 Запрашиваем товары с фильтрами: ${url}`);
                 
                 const response = await fetch(url);
-                const products = await response.json();
+                let products = await response.json();
                 console.log(`📦 Получено товаров: ${products.length}`);
+                
+                // Кастомная сортировка для 17 Series
+                if (level1 === '17 Series') {
+                    const sortOrder = [
+                        'iPhone 17 Pro Max',
+                        'iPhone 17 Pro',
+                        'iPhone Air',
+                        'iPhone 17'
+                    ];
+                    
+                    products.sort((a, b) => {
+                        const aName = a.name || a.level_2 || '';
+                        const bName = b.name || b.level_2 || '';
+                        
+                        const aIndex = sortOrder.findIndex(order => aName.includes(order));
+                        const bIndex = sortOrder.findIndex(order => bName.includes(order));
+                        
+                        // Если оба найдены в порядке сортировки
+                        if (aIndex !== -1 && bIndex !== -1) {
+                            return aIndex - bIndex;
+                        }
+                        // Если только один найден, он идет первым
+                        if (aIndex !== -1) return -1;
+                        if (bIndex !== -1) return 1;
+                        // Если оба не найдены, сортируем по имени
+                        return aName.localeCompare(bName);
+                    });
+                }
                 
                 currentView = 'brand_products';
                 
@@ -8137,7 +8165,35 @@
                 if (currentLevel2Filter) params.append('level2', currentLevel2Filter);
                 
                 const response = await fetch(`${API_BASE}/products?${params.toString()}`);
-                const products = await response.json();
+                let products = await response.json();
+                
+                // Кастомная сортировка для 17 Series
+                if (currentLevel1Filter === '17 Series') {
+                    const sortOrder = [
+                        'iPhone 17 Pro Max',
+                        'iPhone 17 Pro',
+                        'iPhone Air',
+                        'iPhone 17'
+                    ];
+                    
+                    products.sort((a, b) => {
+                        const aName = a.name || a.level_2 || '';
+                        const bName = b.name || b.level_2 || '';
+                        
+                        const aIndex = sortOrder.findIndex(order => aName.includes(order));
+                        const bIndex = sortOrder.findIndex(order => bName.includes(order));
+                        
+                        // Если оба найдены в порядке сортировки
+                        if (aIndex !== -1 && bIndex !== -1) {
+                            return aIndex - bIndex;
+                        }
+                        // Если только один найден, он идет первым
+                        if (aIndex !== -1) return -1;
+                        if (bIndex !== -1) return 1;
+                        // Если оба не найдены, сортируем по имени
+                        return aName.localeCompare(bName);
+                    });
+                }
                 
                 // Обновляем только товары в grid
                 productsContainer.innerHTML = products.map(product => {
