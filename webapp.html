@@ -724,7 +724,7 @@
             animation: fadeInUp 0.6s ease 0.1s forwards;
             display: flex;
             align-items: center;
-            min-height: 90px;
+            min-height: 140px;
         }
         
         .promo-banner-iphone17 {
@@ -862,17 +862,18 @@
             position: relative;
             z-index: 2;
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             justify-content: space-between;
             width: 100%;
             padding: 10px 15px;
             gap: 15px;
+            min-height: 120px;
         }
         
         .promo-text {
             flex: 1;
             max-width: 50%;
-            align-self: flex-start;
+            align-self: center;
             padding-top: 0;
         }
         
@@ -922,13 +923,15 @@
             align-items: center;
             justify-content: center;
             position: relative;
+            min-height: 100px;
+            height: 100px;
         }
         
         .promo-image img,
         .promo-image video {
             max-width: 100%;
             height: auto;
-            max-height: 180px;
+            max-height: 100px;
             object-fit: contain;
             filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.4));
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1005,7 +1008,7 @@
                 width: 100%;
                 flex-shrink: 0;
                 scroll-snap-align: start;
-                min-height: 240px;
+                min-height: 180px;
                 border-radius: 12px;
                 margin-right: 0;
                 box-shadow: none;
@@ -1024,6 +1027,7 @@
                 padding: 10px 12px;
                 gap: 8px;
                 text-align: center;
+                min-height: 160px;
             }
             
             .promo-text {
@@ -1053,7 +1057,7 @@
             
             .promo-image img,
             .promo-image video {
-                max-height: 180px;
+                max-height: 120px;
             }
         }
         
@@ -1084,7 +1088,7 @@
                 width: 100%;
                 flex-shrink: 0;
                 scroll-snap-align: start;
-                min-height: 220px;
+                min-height: 160px;
                 border-radius: 10px;
                 margin-bottom: 0;
                 box-shadow: none;
@@ -1103,6 +1107,7 @@
                 padding: 8px 10px;
                 gap: 6px;
                 text-align: center;
+                min-height: 140px;
             }
             
             .promo-text {
@@ -1128,7 +1133,7 @@
             
             .promo-image img,
             .promo-image video {
-                max-height: 150px;
+                max-height: 100px;
             }
         }
         
@@ -1820,61 +1825,81 @@
             gap: 8px;
         }
         
-        .variant-btn {
+        .variant-btn,
+        .variant-button {
             position: relative;
-            padding: 8px 14px;
+            padding: 6px 12px;
             border: 2px solid rgba(45, 108, 223, 0.3);
             border-radius: 8px;
             background: white;
             cursor: pointer;
             transition: all 0.2s ease;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 500;
             color: #374151;
             white-space: nowrap;
             text-align: center;
         }
         
-        .variant-btn:hover {
-            border-color: rgba(45, 108, 223, 0.6);
-            box-shadow: 0 2px 8px rgba(45, 108, 223, 0.15);
+        .variant-btn:hover:not(.active):not(.color-btn),
+        .variant-button:hover:not(.active):not(.variant-button-color) {
+            border-color: rgba(45, 108, 223, 0.8);
+            border-width: 2px;
+            box-shadow: 0 2px 8px rgba(45, 108, 223, 0.2);
+            background: white !important;
+            color: #374151 !important;
         }
         
-        .variant-btn.active {
+        .variant-btn.active:not(.color-btn),
+        .variant-button.active:not(.variant-button-color) {
             border-color: #2d6cdf;
             background: #2d6cdf;
             color: white;
         }
         
-        .variant-btn.active:hover {
+        .variant-btn.active:hover:not(.color-btn),
+        .variant-button.active:hover:not(.variant-button-color) {
             border-color: #2d6cdf;
             background: #2d6cdf;
+            color: white;
         }
         
         /* Special styles for color buttons */
-        .color-btn {
+        .color-btn,
+        .variant-button-color {
             width: 28px;
             height: 28px;
             padding: 0;
             border-radius: 50%;
-            border: 3px solid rgba(45, 108, 223, 0.3) !important;
+            border: 2px solid rgba(45, 108, 223, 0.3) !important;
             position: relative;
-            transition: all 0.2s ease;
+            transition: border-color 0.2s ease, transform 0.2s ease;
             cursor: pointer;
             min-width: 28px;
             box-sizing: border-box;
         }
         
-        .color-btn:hover {
+        .variant-button-color {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+        }
+        
+        .color-btn:hover,
+        .variant-button-color:hover {
             border-color: rgba(45, 108, 223, 0.6);
             transform: scale(1.05);
         }
         
-        .color-btn.active {
-            border-color: #2d6cdf;
-            border-width: 4px;
-            box-shadow: 0 0 0 2px rgba(45, 108, 223, 0.2);
+        .variant-btn.color-btn.active,
+        .variant-button-color.active {
+            border-width: 4px !important;
         }
+        
+        .variant-btn.color-btn.active,
+        .variant-btn.color-btn.active:hover,
+        .variant-button-color.active,
+        .variant-button-color.active:hover {}
         
         /* Tooltip for color button */
         .color-btn[data-tooltip]::after {
@@ -2922,30 +2947,6 @@
             flex-wrap: wrap;
         }
         
-        .variant-button {
-            position: relative;
-            padding: 6px 12px;
-            border: 2px solid rgba(45, 108, 223, 0.3);
-            border-radius: 8px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: #374151;
-        }
-        
-        .variant-button:hover {
-            border-color: rgba(45, 108, 223, 0.6);
-            box-shadow: 0 2px 8px rgba(45, 108, 223, 0.15);
-        }
-        
-        .variant-button.active {
-            border-color: #2d6cdf;
-            background: #2d6cdf;
-            color: white;
-        }
-        
         .variant-button input[type="radio"] {
             position: absolute;
             opacity: 0;
@@ -2954,27 +2955,6 @@
         
         .variant-buttons-color {
             gap: 10px;
-        }
-        
-        .variant-button-color {
-            width: 36px;
-            height: 36px;
-            padding: 0;
-            border-radius: 50%;
-            border: 3px solid rgba(45, 108, 223, 0.3);
-            position: relative;
-            transition: all 0.2s ease;
-        }
-        
-        .variant-button-color:hover {
-            border-color: rgba(45, 108, 223, 0.6);
-            transform: scale(1.05);
-        }
-        
-        .variant-button-color.active {
-            border-color: #2d6cdf;
-            border-width: 4px;
-            box-shadow: 0 0 0 2px rgba(45, 108, 223, 0.2);
         }
         
         .variant-button-color.deep-blue {
@@ -3117,7 +3097,7 @@
         
         .product-detail-description,
         .product-detail-specifications {
-            margin-top: 40px;
+            margin-top: 20px;
             padding-top: 30px;
             border-top: 1px solid rgba(229, 231, 235, 0.6);
         }
@@ -3138,7 +3118,7 @@
         
         .specifications-list {
             display: grid;
-            gap: 12px;
+            gap: 8px;
         }
         
         .spec-item {
@@ -5377,7 +5357,18 @@
                 
                 // Проверяем, нужно ли восстановить страницы
                 if (stateRestored && currentView === 'product_detail' && currentProductModelName) {
-                    loadProductDetailPage(currentProductModelName);
+                    // Читаем варианты из URL, если они есть
+                    const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+                    const variants = {
+                        memory: urlParams.get('memory') || '',
+                        color: urlParams.get('color') || '',
+                        sim: urlParams.get('sim') || '',
+                        ram: urlParams.get('ram') || '',
+                        ssd: urlParams.get('ssd') || '',
+                        screen: urlParams.get('screen') || '',
+                        capacity: urlParams.get('capacity') || ''
+                    };
+                    loadProductDetailPage(currentProductModelName, variants);
                 } else if (stateRestored && currentView === 'guarantee') {
                     loadGuaranteePage();
                 } else if (stateRestored && currentView === 'delivery') {
@@ -5422,7 +5413,18 @@
                         
                         // Восстанавливаем страницу в зависимости от view
                         if (currentView === 'product_detail' && state.modelName) {
-                            loadProductDetailPage(state.modelName);
+                            // Читаем варианты из URL
+                            const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+                            const variants = {
+                                memory: urlParams.get('memory') || '',
+                                color: urlParams.get('color') || '',
+                                sim: urlParams.get('sim') || '',
+                                ram: urlParams.get('ram') || '',
+                                ssd: urlParams.get('ssd') || '',
+                                screen: urlParams.get('screen') || '',
+                                capacity: urlParams.get('capacity') || ''
+                            };
+                            loadProductDetailPage(state.modelName, variants);
                         } else if (currentView === 'guarantee') {
                             loadGuaranteePage();
                         } else if (currentView === 'delivery') {
@@ -5854,7 +5856,30 @@
                 ...stateData
             };
             
-            const url = `#${view}`;
+            let url = `#${view}`;
+            
+            // Для детальной страницы добавляем query параметры
+            if (view === 'product_detail' && stateData.modelName) {
+                const params = new URLSearchParams();
+                params.set('model', stateData.modelName);
+                
+                // Добавляем варианты, если они есть
+                if (stateData.variants) {
+                    if (stateData.variants.memory) params.set('memory', stateData.variants.memory);
+                    if (stateData.variants.color) params.set('color', stateData.variants.color);
+                    if (stateData.variants.sim) params.set('sim', stateData.variants.sim);
+                    if (stateData.variants.ram) params.set('ram', stateData.variants.ram);
+                    if (stateData.variants.ssd) params.set('ssd', stateData.variants.ssd);
+                    if (stateData.variants.screen) params.set('screen', stateData.variants.screen);
+                    if (stateData.variants.capacity) params.set('capacity', stateData.variants.capacity);
+                }
+                
+                const queryString = params.toString();
+                if (queryString) {
+                    url += `?${queryString}`;
+                }
+            }
+            
             history.pushState(state, '', url);
             console.log('📝 Added to history:', view, state);
         }
@@ -7093,15 +7118,32 @@
             try {
                 showLoading();
                 
+                // Если варианты не переданы, читаем их из URL
+                if (!selectedVariants || Object.keys(selectedVariants).length === 0) {
+                    const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+                    if (urlParams.get('model') === modelName || urlParams.has('memory') || urlParams.has('color')) {
+                        selectedVariants = {
+                            memory: urlParams.get('memory') || '',
+                            color: urlParams.get('color') || '',
+                            sim: urlParams.get('sim') || '',
+                            ram: urlParams.get('ram') || '',
+                            ssd: urlParams.get('ssd') || '',
+                            screen: urlParams.get('screen') || '',
+                            capacity: urlParams.get('capacity') || ''
+                        };
+                    }
+                }
+                
                 // Сохраняем состояние
                 currentView = 'product_detail';
                 currentProductId = null;
                 currentProductModelName = modelName;
                 saveAppState();
                 
-                // Добавляем в историю браузера
+                // Добавляем в историю браузера с вариантами
                 pushHistoryState('product_detail', {
-                    modelName: modelName
+                    modelName: modelName,
+                    variants: selectedVariants
                 });
                 
                 // Ищем продукт по модели
@@ -7249,27 +7291,67 @@
                 }
                 
                 // Находим вариант с выбранными параметрами для получения цены
-                const matchingVariant = variantsData.variants.find(v => 
-                    v.memory === selectedMemory && 
-                    v.color === selectedColor &&
-                    (!selectedSim || v.sim === selectedSim) &&
-                    (!selectedRam || v.ram === selectedRam) &&
-                    (!selectedSsd || v.ssd === selectedSsd) &&
-                    (!selectedScreen || v.screen === selectedScreen) &&
-                    (!selectedCapacity || v.capacity === selectedCapacity)
-                ) || variantsData.variants.find(v => 
-                    v.memory === selectedMemory || v.color === selectedColor
-                ) || variantsData.variants[0] || null;
+                // Сначала ищем точное совпадение всех указанных параметров
+                let matchingVariant = variantsData.variants.find(v => {
+                    const memoryMatch = !selectedMemory || v.memory === selectedMemory;
+                    const colorMatch = !selectedColor || v.color === selectedColor;
+                    const simMatch = !selectedSim || v.sim === selectedSim || (v.sim_type && v.sim_type === selectedSim);
+                    const ramMatch = !selectedRam || v.ram === selectedRam;
+                    const ssdMatch = !selectedSsd || v.ssd === selectedSsd || (v.disk && v.disk === selectedSsd);
+                    const screenMatch = !selectedScreen || v.screen === selectedScreen;
+                    const capacityMatch = !selectedCapacity || v.capacity === selectedCapacity;
+                    
+                    return memoryMatch && colorMatch && simMatch && ramMatch && ssdMatch && screenMatch && capacityMatch;
+                });
+                
+                // Если точное совпадение не найдено, ищем по памяти и цвету
+                if (!matchingVariant && selectedMemory && selectedColor) {
+                    matchingVariant = variantsData.variants.find(v => 
+                        v.memory === selectedMemory && v.color === selectedColor
+                    );
+                }
+                
+                // Если все еще не найдено, ищем по памяти или цвету
+                if (!matchingVariant) {
+                    matchingVariant = variantsData.variants.find(v => 
+                        (selectedMemory && v.memory === selectedMemory) || (selectedColor && v.color === selectedColor)
+                    );
+                }
+                
+                // Если ничего не найдено, берем первый вариант
+                if (!matchingVariant) {
+                    matchingVariant = variantsData.variants[0] || null;
+                }
+                
+                // Логирование для отладки
+                if (matchingVariant) {
+                    console.log('Найден вариант для цены:', {
+                        selected: { memory: selectedMemory, color: selectedColor, sim: selectedSim, ram: selectedRam, ssd: selectedSsd, screen: selectedScreen, capacity: selectedCapacity },
+                        found: { memory: matchingVariant.memory, color: matchingVariant.color, sim: matchingVariant.sim || matchingVariant.sim_type, ram: matchingVariant.ram, ssd: matchingVariant.ssd || matchingVariant.disk, screen: matchingVariant.screen, capacity: matchingVariant.capacity },
+                        price: matchingVariant.price
+                    });
+                }
                 
                 // Определяем первый доступный вариант
                 const firstVariant = matchingVariant || variantsData.variants[0] || null;
                 
                 // Находим цену для выбранного варианта
                 let selectedPrice = product.price;
-                if (matchingVariant && matchingVariant.price) {
+                let selectedOldPrice = product.old_price;
+                if (matchingVariant) {
+                    if (matchingVariant.price) {
                     selectedPrice = matchingVariant.price;
-                } else if (firstVariant && firstVariant.price) {
+                    }
+                    if (matchingVariant.old_price) {
+                        selectedOldPrice = matchingVariant.old_price;
+                    }
+                } else if (firstVariant) {
+                    if (firstVariant.price) {
                     selectedPrice = firstVariant.price;
+                    }
+                    if (firstVariant.old_price) {
+                        selectedOldPrice = firstVariant.old_price;
+                    }
                 }
                 
                 const content = document.getElementById('content');
@@ -7315,9 +7397,7 @@
                             <div class="product-detail-info">
                                 <div class="product-detail-price">
                                     <span class="price-main" id="detail-price">${Math.round(selectedPrice).toLocaleString()} ₽</span>
-                                    ${product.old_price && product.old_price > selectedPrice ? `
-                                        <span class="price-old">${Math.round(product.old_price).toLocaleString()} ₽</span>
-                                    ` : ''}
+                                    <span class="price-old" id="detail-old-price" style="display: ${selectedOldPrice && selectedOldPrice > selectedPrice ? 'inline' : 'none'};">${selectedOldPrice && selectedOldPrice > selectedPrice ? Math.round(selectedOldPrice).toLocaleString() + ' ₽' : ''}</span>
                                 </div>
                                 
                                 ${memories.length > 0 ? `
@@ -7341,8 +7421,17 @@
                                             ${colors.map(color => {
                                                 const colorLower = color.toLowerCase();
                                                 const colorClass = colorLower.replace(/\s+/g, '-');
+                                                // Применяем цвет сразу при создании HTML
+                                                let colorStyle = null;
+                                                // Специальная обработка для Desert -> Titanium Desert
+                                                const normalizedColor = color.toLowerCase().trim();
+                                                const isDesertColor = normalizedColor === 'desert' || 
+                                                                     (normalizedColor.includes('desert') && !normalizedColor.includes('titanium'));
+                                                const colorNameForStyle = isDesertColor ? 'Titanium Desert' : color;
+                                                colorStyle = getColorStyle(colorNameForStyle);
+                                                const styleAttr = colorStyle ? `style="background-color: ${colorStyle} !important; border-color: ${colorStyle} !important;"` : '';
                                                 return `
-                                                    <label class="variant-button variant-button-color ${colorClass} ${color === selectedColor ? 'active' : ''}" data-color="${color}">
+                                                    <label class="variant-button variant-button-color ${colorClass} ${color === selectedColor ? 'active' : ''}" data-color="${color}" ${styleAttr}>
                                                         <input type="radio" name="color" value="${color}" ${color === selectedColor ? 'checked' : ''}>
                                                         <span class="sr-only">${color}</span>
                                                     </label>
@@ -7506,6 +7595,11 @@
                 const updatePrice = () => {
                     const variants = getAllSelectedVariants();
                     updateDetailPrice(modelName, variants);
+                    // Обновляем URL с вариантами
+                    pushHistoryState('product_detail', {
+                        modelName: modelName,
+                        variants: variants
+                    });
                 };
                 
                 const memoryInputs = document.querySelectorAll('input[name="memory"]');
@@ -7602,6 +7696,107 @@
             } catch (error) {
                 console.error('Ошибка загрузки детальной страницы продукта:', error);
                 hideLoading();
+            }
+        }
+        
+        // Применение цветов к кнопкам вариантов в детальной странице (только для обновления из API, если цвета еще не применены)
+        async function applyColorsToDetailButtons(modelName) {
+            try {
+                // Ждем немного, чтобы DOM обновился
+                await new Promise(resolve => setTimeout(resolve, 50));
+                
+                const colorButtons = document.querySelectorAll('.variant-button-color');
+                if (colorButtons.length === 0) {
+                    return;
+                }
+                
+                // Пытаемся загрузить цветовую схему из API для более точных цветов
+                const modelKey = getModelKey(modelName);
+                let colorsData = [];
+                
+                if (modelKey) {
+                    try {
+                        const response = await fetch(`/color-schemes/${modelKey}`);
+                        if (response.ok) {
+                            const data = await response.json();
+                            colorsData = data.colors || [];
+                        }
+                    } catch (error) {
+                        // Игнорируем ошибки
+                    }
+                }
+                
+                // Применяем цвета к кнопкам только если они еще не применены (нет inline стилей)
+                colorButtons.forEach(button => {
+                    // Пропускаем кнопки, у которых уже есть inline стили (цвета уже применены в HTML)
+                    if (button.style.backgroundColor && button.style.backgroundColor !== '') {
+                        return;
+                    }
+                    
+                    const colorName = button.getAttribute('data-color');
+                    if (!colorName) {
+                        return;
+                    }
+                    
+                    let colorStyle = null;
+                    
+                    // Нормализуем название цвета для поиска
+                    const normalizedColorName = colorName.toLowerCase().trim();
+                    
+                    // Специальная обработка для Titanium Desert / Desert
+                    const isDesertColor = normalizedColorName.includes('desert') || 
+                                         normalizedColorName === 'desert' ||
+                                         (normalizedColorName.includes('titanium') && normalizedColorName.includes('desert'));
+                    
+                    // Сначала пытаемся найти цвет в загруженной схеме
+                    if (colorsData.length > 0) {
+                        const colorData = colorsData.find(c => {
+                            if (!c.value) return false;
+                            const normalizedSchemeColor = c.value.toLowerCase().trim();
+                            
+                            // Точное совпадение
+                            if (normalizedSchemeColor === normalizedColorName) return true;
+                            
+                            // Совпадение с заменой пробелов на дефисы
+                            if (normalizedSchemeColor.replace(/\s+/g, '-') === normalizedColorName.replace(/\s+/g, '-')) return true;
+                            
+                            // Специальная обработка для Desert / Titanium Desert
+                            if (isDesertColor) {
+                                return normalizedSchemeColor.includes('desert') || 
+                                       (normalizedSchemeColor.includes('titanium') && normalizedSchemeColor.includes('desert'));
+                            }
+                            
+                            // Частичное совпадение (если один содержит другой)
+                            if (normalizedSchemeColor.includes(normalizedColorName) || 
+                                normalizedColorName.includes(normalizedSchemeColor)) {
+                                return true;
+                            }
+                            
+                            return false;
+                        });
+                        if (colorData && colorData.hex) {
+                            colorStyle = colorData.hex;
+                        }
+                    }
+                    
+                    // Если не нашли в схеме, используем функцию getColorStyle
+                    if (!colorStyle) {
+                        // Специальная обработка для Desert -> Titanium Desert
+                        let colorNameForStyle = colorName;
+                        if (isDesertColor && !normalizedColorName.includes('titanium')) {
+                            colorNameForStyle = 'Titanium Desert';
+                        }
+                        colorStyle = getColorStyle(colorNameForStyle);
+                    }
+                    
+                    // Применяем цвет только если он еще не применен
+                    if (colorStyle) {
+                        button.style.setProperty('background-color', colorStyle, 'important');
+                        button.style.setProperty('border-color', colorStyle, 'important');
+                    }
+                });
+            } catch (error) {
+                // Игнорируем ошибки
             }
         }
         
@@ -7941,22 +8136,60 @@
                 if (variantsResponse.ok) {
                     const variantsData = await variantsResponse.json();
                     // Ищем вариант, который соответствует всем выбранным параметрам
-                    const matchingVariant = variantsData.variants.find(v => {
-                        return (!variants.memory || v.memory === variants.memory) &&
-                               (!variants.color || v.color === variants.color) &&
-                               (!variants.sim || (v.sim_type || v.sim) === variants.sim) &&
-                               (!variants.ram || v.ram === variants.ram) &&
-                               (!variants.ssd || (v.ssd || v.disk) === variants.ssd) &&
-                               (!variants.screen || v.screen === variants.screen) &&
-                               (!variants.capacity || v.capacity === variants.capacity);
-                    }) || variantsData.variants.find(v => 
-                        v.memory === variants.memory && v.color === variants.color
-                    ) || variantsData.variants[0];
+                    // Сначала ищем точное совпадение всех указанных параметров
+                    let matchingVariant = variantsData.variants.find(v => {
+                        const memoryMatch = !variants.memory || v.memory === variants.memory;
+                        const colorMatch = !variants.color || v.color === variants.color;
+                        const simMatch = !variants.sim || v.sim === variants.sim || (v.sim_type && v.sim_type === variants.sim);
+                        const ramMatch = !variants.ram || v.ram === variants.ram;
+                        const ssdMatch = !variants.ssd || v.ssd === variants.ssd || (v.disk && v.disk === variants.ssd);
+                        const screenMatch = !variants.screen || v.screen === variants.screen;
+                        const capacityMatch = !variants.capacity || v.capacity === variants.capacity;
+                        
+                        return memoryMatch && colorMatch && simMatch && ramMatch && ssdMatch && screenMatch && capacityMatch;
+                    });
                     
-                    if (matchingVariant && matchingVariant.price) {
+                    // Если точное совпадение не найдено, ищем по памяти и цвету
+                    if (!matchingVariant && variants.memory && variants.color) {
+                        matchingVariant = variantsData.variants.find(v => 
+                        v.memory === variants.memory && v.color === variants.color
+                        );
+                    }
+                    
+                    // Если все еще не найдено, ищем по памяти или цвету
+                    if (!matchingVariant) {
+                        matchingVariant = variantsData.variants.find(v => 
+                            (variants.memory && v.memory === variants.memory) || (variants.color && v.color === variants.color)
+                        );
+                    }
+                    
+                    // Если ничего не найдено, берем первый вариант
+                    if (!matchingVariant) {
+                        matchingVariant = variantsData.variants[0];
+                    }
+                    
+                    // Логирование для отладки
+                    if (matchingVariant) {
+                        console.log('Обновление цены - найден вариант:', {
+                            selected: variants,
+                            found: { memory: matchingVariant.memory, color: matchingVariant.color, sim: matchingVariant.sim || matchingVariant.sim_type, ram: matchingVariant.ram, ssd: matchingVariant.ssd || matchingVariant.disk, screen: matchingVariant.screen, capacity: matchingVariant.capacity },
+                            price: matchingVariant.price
+                        });
+                    }
+                    
+                    if (matchingVariant) {
                         const priceElement = document.getElementById('detail-price');
-                        if (priceElement) {
+                        const oldPriceElement = document.getElementById('detail-old-price');
+                        
+                        if (priceElement && matchingVariant.price) {
                             priceElement.textContent = `${Math.round(matchingVariant.price).toLocaleString()} ₽`;
+                        }
+                        
+                        if (oldPriceElement && matchingVariant.old_price && matchingVariant.old_price > (matchingVariant.price || 0)) {
+                            oldPriceElement.textContent = `${Math.round(matchingVariant.old_price).toLocaleString()} ₽`;
+                            oldPriceElement.style.display = 'inline';
+                        } else if (oldPriceElement) {
+                            oldPriceElement.style.display = 'none';
                         }
                     }
                 }
@@ -8914,9 +9147,17 @@
                 return '#E9ECEF'; // Дефолтный серый цвет
             }
             
+            const normalizedColorName = colorName.toLowerCase().trim();
+            
             // Отладочный вывод для Titanium Desert
-            if (colorName.toLowerCase().includes('titanium') || colorName.toLowerCase().includes('desert')) {
+            if (normalizedColorName.includes('titanium') || normalizedColorName.includes('desert')) {
                 console.log('🔍 getColorStyle вызвана для:', colorName, 'тип:', typeof colorName);
+            }
+            
+            // Специальная обработка для Desert -> Titanium Desert
+            if (normalizedColorName === 'desert' || (normalizedColorName.includes('desert') && !normalizedColorName.includes('titanium'))) {
+                console.log('🔄 Преобразование "Desert" -> "Titanium Desert"');
+                colorName = 'Titanium Desert';
             }
             
             const colorMap = {
@@ -8926,7 +9167,8 @@
                 'titanium-black': '#000000', // Чисто черный
                 'titanium-white': '#FFFFFF', 'titanium-natural': '#979792', 'titanium-desert': '#d0b6a8',
                 // Дублируем для разных вариантов написания
-                'Titanium Desert': '#d0b6a8', 'TITANIUM-DESERT': '#d0b6a8',
+                'titanium desert': '#d0b6a8', 'Titanium Desert': '#d0b6a8', 'TITANIUM-DESERT': '#d0b6a8',
+                'desert': '#d0b6a8', // Desert без Titanium тоже должен быть Titanium Desert
                 'deep-blue': '#1B2951', 'cosmic-orange': '#FF6B35', 'silver': '#E8E8E8', // Светло серебристый
                 'teal': '#20B2AA', // Бирюзовый
 
@@ -8955,22 +9197,26 @@
                 'camouflage': '#556B2F' // Камуфляжный цвет (оливково-зеленый)
             };
             
+            const normalizedForMap = colorName.toLowerCase().trim();
+            
             // Проверяем точное совпадение
-            if (colorMap[colorName.toLowerCase()]) {
-                const result = colorMap[colorName.toLowerCase()];
-                if (colorName.toLowerCase().includes('titanium') || colorName.toLowerCase().includes('desert')) {
-                    console.log('✅ Найдено точное совпадение:', colorName.toLowerCase(), '->', result);
+            if (colorMap[normalizedForMap]) {
+                const result = colorMap[normalizedForMap];
+                if (normalizedForMap.includes('titanium') || normalizedForMap.includes('desert')) {
+                    console.log('✅ Найдено точное совпадение:', normalizedForMap, '->', result);
                 }
                 return result;
             }
             
             // Проверяем частичное совпадение (для составных цветов как "titanium-black")
-            for (const [key, color] of Object.entries(colorMap)) {
-                if (colorName.toLowerCase().includes(key)) {
-                    if (colorName.toLowerCase().includes('titanium') || colorName.toLowerCase().includes('desert')) {
-                        console.log('✅ Найдено частичное совпадение:', key, 'для', colorName, '->', color);
+            // Сначала проверяем более специфичные совпадения (titanium-desert перед desert)
+            const sortedKeys = Object.keys(colorMap).sort((a, b) => b.length - a.length);
+            for (const key of sortedKeys) {
+                if (normalizedForMap.includes(key) || key.includes(normalizedForMap)) {
+                    if (normalizedForMap.includes('titanium') || normalizedForMap.includes('desert')) {
+                        console.log('✅ Найдено частичное совпадение:', key, 'для', colorName, '->', colorMap[key]);
                     }
-                    return color;
+                    return colorMap[key];
                 }
             }
             
