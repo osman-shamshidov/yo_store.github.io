@@ -770,25 +770,60 @@
         }
         
         .promo-banner-2 .promo-text {
-            color: #1a1a1a;
+            color: #111827;
         }
         
         .promo-banner-2 .promo-title {
-            color: #1a1a1a;
-            background: none;
-            -webkit-background-clip: unset;
-            -webkit-text-fill-color: #1a1a1a;
-            background-clip: unset;
+            font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 50%, #374151 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 22px;
+            font-weight: 530;
+            margin-bottom: 6px;
+            line-height: 1.07143;
+            letter-spacing: -0.005em;
         }
         
         .promo-banner-2 .promo-subtitle {
-            color: rgba(26, 26, 26, 0.8);
+            color: rgba(17, 24, 39, 0.75);
+            font-weight: 500;
+            letter-spacing: 0.2px;
         }
         
         .promo-banner-2 .promo-badge {
-            background: rgba(26, 26, 26, 0.1);
-            color: #1a1a1a;
-            border: 1px solid rgba(26, 26, 26, 0.2);
+            background: linear-gradient(135deg, rgba(17, 24, 39, 0.08) 0%, rgba(17, 24, 39, 0.12) 100%);
+            color: #111827;
+            border: 1px solid rgba(17, 24, 39, 0.15);
+            backdrop-filter: blur(10px);
+            font-weight: 700;
+        }
+        
+        .promo-banner-iphone17 .promo-title {
+            font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 50%, #e8edff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 22px;
+            font-weight: 530;
+            margin-bottom: 6px;
+            line-height: 1.07143;
+            letter-spacing: -0.005em;
+            text-shadow: none;
+        }
+        
+        .promo-banner-iphone17 .promo-subtitle {
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 500;
+            letter-spacing: 0.2px;
+        }
+        
+        .promo-banner-iphone17 .promo-badge {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.15) 100%);
+            color: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.25);
         }
         
         .promo-banner::before {
@@ -845,35 +880,39 @@
             display: inline-block;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.15) 100%);
             backdrop-filter: blur(20px);
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 0.5rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.55rem;
             font-weight: 700;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.2px;
             border: 1px solid rgba(255, 255, 255, 0.3);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            color: rgba(255, 255, 255, 0.95);
         }
         
         .promo-title {
-            font-size: 1.2rem;
-            font-weight: 800;
-            margin-bottom: 3px;
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
+            font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+            font-size: 22px;
+            font-weight: 530;
+            margin-bottom: 6px;
+            text-shadow: none;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 50%, #e0e7ff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            line-height: 1.1;
+            line-height: 1.07143;
+            letter-spacing: -0.005em;
         }
         
         .promo-subtitle {
-            font-size: 0.7rem;
-            opacity: 0.9;
-            font-weight: 400;
-            line-height: 1.4;
-            color: rgba(255, 255, 255, 0.95);
+            font-size: 0.85rem;
+            opacity: 0.95;
+            font-weight: 500;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.2px;
         }
         
         .promo-image {
@@ -998,11 +1037,13 @@
             }
             
             .promo-title {
-                font-size: 1.25rem;
+                font-size: 14px;
+                line-height: 1.07143;
+                letter-spacing: -0.005em;
             }
             
             .promo-subtitle {
-                font-size: 0.75rem;
+                font-size: 0.8rem;
             }
             
             .promo-badge {
@@ -1071,11 +1112,13 @@
             }
             
             .promo-title {
-                font-size: 1rem;
+                font-size: 12px;
+                line-height: 1.07143;
+                letter-spacing: -0.005em;
             }
             
             .promo-subtitle {
-                font-size: 0.65rem;
+                font-size: 0.7rem;
             }
             
             .promo-badge {
@@ -6062,11 +6105,11 @@
                 let categoriesHtml = `
                     <div class="promo-carousel-wrapper">
                         <div class="promo-banners-container" id="promoCarousel">
-                            <div class="promo-banner promo-banner-iphone17" onclick="loadProductDetailPage('iPhone 17 Pro Max');">
+                            <div class="promo-banner promo-banner-iphone17" onclick="loadProductsWithFilters('Apple', 'Смартфоны', '17 Series', null);">
                                 <div class="promo-banner-content">
                                     <div class="promo-text">
                                         <div class="promo-badge">Новинка</div>
-                                        <div class="promo-title">17 Pro Max</div>
+                                        <div class="promo-title">iPhone 17 Pro</div>
                                         <div class="promo-subtitle">Новейший iPhone с максимальными возможностями</div>
                                     </div>
                                     <div class="promo-image">
