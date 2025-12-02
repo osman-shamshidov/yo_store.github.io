@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Yo Store - Магазин электроники</title>
     <meta name="app-version" content="20241105-001">
+    <link rel="icon" type="image/jpeg" href="/static/images/favicon.png">
+    <link rel="apple-touch-icon" href="/static/images/favicon.png">
     <style>
         * {
             margin: 0;
@@ -41,6 +43,10 @@
             flex: 1 0 auto; /* растягиваем контент, чтобы футер был внизу */
         }
         
+        .container > .header:first-child {
+            margin-top: 0;
+        }
+        
         /* Убираем лишние отступы сверху на мобильных */
         @media (max-width: 480px) {
             body {
@@ -54,8 +60,20 @@
             }
             
             .header {
-                margin-top: 20px;
+                margin-top: 10px;
                 margin-bottom: 0;
+            }
+            
+            .header::before {
+                top: -10px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 100vw;
+                bottom: 0;
+            }
+            
+            .header-mobile::before {
+                bottom: 120px;
             }
             
             .catalog-btn {
@@ -98,19 +116,30 @@
         /* Мобильные устройства */
         @media screen and (max-width: 768px) {
             .container {
-                padding: 15px;
+                padding: 10px;
                 width: 100%;
-                max-width: none;
+                max-width: 100%;
+                box-sizing: border-box;
+                overflow-x: hidden;
             }
             
             body {
-                width: 100vw;
+                width: 100%;
+                max-width: 100vw;
                 overflow-x: hidden;
+                box-sizing: border-box;
             }
             
             html {
-                width: 100vw;
+                width: 100%;
+                max-width: 100vw;
                 overflow-x: hidden;
+                box-sizing: border-box;
+            }
+            
+            img, video, iframe {
+                max-width: 100%;
+                height: auto;
             }
             
             .header-desktop {
@@ -122,7 +151,20 @@
             }
             
             .header {
+                margin: 10px 0 20px 0;
                 padding: 10px 0;
+            }
+            
+            .header::before {
+                top: -10px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 100vw;
+                bottom: 0;
+            }
+            
+            .header-mobile::before {
+                bottom: 120px;
             }
             
             .catalog-btn {
@@ -267,8 +309,25 @@
             background: transparent;
             border-bottom: none;
             border-radius: 0;
-            margin: 20px 0;
+            margin: 10px 0 20px 0;
             padding: 10px 0;
+            position: relative;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100vw;
+            bottom: 0;
+            background: white;
+            z-index: -1;
+        }
+        
+        .container > .header:first-child {
+            margin-top: 10px;
         }
         
         .header-desktop {
@@ -1139,7 +1198,7 @@
         
         .categories {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 12px;
             margin-bottom: 30px;
         }
@@ -1204,8 +1263,8 @@
         
         .category-card.expanded .brands-container {
             max-height: 500px;
-            padding: 16px;
-            gap: 12px;
+            padding: 12px;
+            gap: 8px;
         }
         
         /* Стили для кнопок брендов - изначально маленькие */
@@ -1227,32 +1286,32 @@
             min-width: auto;
             position: relative;
             overflow: visible;
-            transform: scale(0.8);
-            opacity: 0.7;
+            transform: scale(0.95);
+            opacity: 0.85;
         }
         
         .brand-button img {
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
         }
         
         /* При expanded - большие бренды */
         .category-card.expanded .brand-button {
-            padding: 16px 24px;
-            font-size: 0.875rem;
-            border-radius: 12px;
+            padding: 10px 16px;
+            font-size: 0.8rem;
+            border-radius: 10px;
             transform: scale(1);
             opacity: 1;
-            min-width: 120px;
+            min-width: 90px;
         }
         
         .category-card.expanded .brand-button img {
-            width: 28px;
-            height: 28px;
+            width: 20px;
+            height: 20px;
         }
         
         .category-card.expanded .brand-button:hover {
-            transform: scale(1.05);
+            transform: scale(1.02);
             background: #2d6cdf;
             color: white;
             border-color: #2d6cdf;
@@ -1288,9 +1347,9 @@
         }
         
         .brand-button img {
-            height: 28px;
+            height: 20px;
             width: auto;
-            max-width: 100px;
+            max-width: 80px;
             object-fit: contain;
             display: block;
         }
@@ -1461,7 +1520,7 @@
                 font-size: 0.8rem !important;
             }
             .brand-button img {
-                height: 32px !important;
+                height: 24px !important;
             }
             .brand-name {
                 font-size: 0.75rem !important;
@@ -1525,7 +1584,7 @@
                 font-size: 0.7rem !important;
             }
             .brand-button img {
-                height: 28px !important;
+                height: 20px !important;
             }
             .brand-name {
                 font-size: 0.7rem !important;
@@ -2486,10 +2545,12 @@
         }
         
         .product-detail-title {
-            font-size: 2.5rem;
-            font-weight: 700;
+            font-size: 1.875rem;
+            font-weight: 500;
             margin-bottom: 30px;
             color: #111827;
+            letter-spacing: -0.02em;
+            font-family: "SF Pro Display", "SF Pro Icons", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
         }
         
         .product-detail-content {
@@ -2513,6 +2574,88 @@
             height: fit-content;
             width: 100%;
             flex-shrink: 0;
+        }
+        
+        .product-images-container {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        
+        .product-thumbnails-carousel {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 85px;
+            flex-shrink: 0;
+            max-height: 500px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 8px;
+            padding-left: 4px;
+            padding-top: 4px;
+            padding-bottom: 4px;
+        }
+        
+        .product-thumbnails-carousel::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .product-thumbnails-carousel::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 2px;
+        }
+        
+        .product-thumbnails-carousel::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 2px;
+        }
+        
+        .product-thumbnails-carousel::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        .thumbnails-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .thumbnail-item {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            background: white;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+        
+        .thumbnail-item:hover {
+            border-color: #2d6cdf;
+            transform: scale(1.03);
+        }
+        
+        .thumbnail-item.active {
+            border-color: #2d6cdf;
+            box-shadow: 0 2px 8px rgba(45, 108, 223, 0.3);
+        }
+        
+        .thumbnail-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 4px;
+        }
+        
+        .product-image-carousel-detail {
+            flex: 1;
         }
         
         .product-detail-images .top-specifications {
@@ -2547,6 +2690,7 @@
             display: flex;
             transition: transform 0.4s ease;
             width: 100%;
+            margin-top: 5px;
         }
         
         .product-detail-recommendations-slide {
@@ -2642,20 +2786,85 @@
         
         @media (max-width: 640px) {
             /* Ограничиваем ширину страницы и контента */
+            .container {
+                padding: 10px;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                overflow-x: hidden;
+            }
+            
             .product-detail-page {
                 width: 100%;
-                max-width: 100vw;
-                padding: 15px;
+                max-width: 100%;
+                padding: 0;
+                margin: 0;
+                box-sizing: border-box;
                 overflow-x: hidden;
             }
             
             .product-detail-content {
                 width: 100%;
                 max-width: 100%;
+                box-sizing: border-box;
                 overflow-x: hidden;
             }
             
             .product-detail-info {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                overflow-x: hidden;
+                padding: 0;
+            }
+            
+            .product-detail-info > * {
+                max-width: 100%;
+                box-sizing: border-box;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+            
+            .btn-add-to-cart-detail {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .product-description,
+            .product-specifications,
+            .product-description-spoiler,
+            .product-specifications-spoiler,
+            .top-specifications,
+            table,
+            .product-variants {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                overflow-x: auto;
+            }
+            
+            .product-detail-images {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                overflow-x: hidden;
+            }
+            
+            .product-images-container {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                overflow-x: hidden;
+            }
+            
+            .product-image-carousel-detail {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .product-detail-recommendations {
                 width: 100%;
                 max-width: 100%;
                 box-sizing: border-box;
@@ -2779,7 +2988,6 @@
             position: relative;
             width: 100%;
             max-width: 500px;
-            margin: 0 auto;
             background: white;
             border-radius: 15px;
             overflow: hidden;
@@ -3137,6 +3345,330 @@
             color: #6b7280;
         }
         
+        /* Стили для раздела преимуществ */
+        .product-benefits-section {
+            margin-top: 60px;
+            padding-top: 60px;
+            border-top: 1px solid rgba(229, 231, 235, 0.6);
+        }
+        
+        .benefits-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .benefits-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .benefits-subtitle {
+            font-size: 1.125rem;
+            color: #6b7280;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .benefits-cards-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 20px;
+        }
+        
+        .benefits-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .benefit-card {
+            background: transparent;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: none;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .benefit-card:hover {
+            transform: translateY(-4px);
+        }
+        
+        .benefit-icon {
+            width: 100%;
+            height: 360px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            overflow: hidden;
+            background: transparent;
+        }
+        
+        .benefit-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .benefit-card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .benefit-card-text {
+            font-size: 0.9375rem;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+        
+        @media screen and (max-width: 968px) {
+            .benefits-title {
+                font-size: 1.75rem;
+            }
+            
+            .benefits-subtitle {
+                font-size: 1rem;
+                padding: 0 20px;
+            }
+            
+            .benefits-cards {
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                gap: 20px;
+                padding: 0 20px;
+            }
+            
+            .benefit-card {
+                padding: 16px;
+            }
+        }
+        
+        @media screen and (max-width: 640px) {
+            .product-benefits-section {
+                margin-top: 40px;
+                padding-top: 40px;
+            }
+            
+            .benefits-header {
+                margin-bottom: 30px;
+            }
+            
+            .benefits-title {
+                font-size: 1.5rem;
+                margin-bottom: 16px;
+            }
+            
+            .benefits-subtitle {
+                font-size: 0.9375rem;
+            }
+            
+            .benefits-cards {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                padding: 0;
+            }
+            
+            .benefit-card {
+                padding: 16px;
+            }
+            
+            .benefit-icon {
+                height: 280px;
+                margin-bottom: 12px;
+            }
+            
+            .benefit-card-title {
+                font-size: 1rem;
+            }
+            
+            .benefit-card-text {
+                font-size: 0.875rem;
+            }
+        }
+        
+        /* Блок аксессуаров для iPhone */
+        .accessories-section {
+            margin-top: 60px;
+            padding: 60px 40px;
+            border-radius: 16px;
+            text-align: left;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .accessories-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/aalp-magsafe-strap-header-202509?wid=2880&hei=960&fmt=png-alpha&.v=Mm9DK3AvM1grOWszVnpva1dlSzNtV3R0b05sQ1NuV1p4c3RIT0dCTUxaZ1RxYlRNdkVncHhLL2gwSGxuVWk0TnV5NVU0QmM2b3hmeWJWTTVtN1o5ZmxuM1RUbEtLZ0RVenJDc2UxZ2xVSGQrYWpGdS9XeFgvbS9ITnNYOEhYaG4');
+            background-size: cover;
+            background-position: center 10%;
+            background-repeat: no-repeat;
+            z-index: 0;
+        }
+        
+        .accessories-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: transparent;
+            z-index: 1;
+        }
+        
+        .accessories-content {
+            position: relative;
+            z-index: 2;
+            max-width: 40%;
+            text-align: center;
+        }
+        
+        .accessories-section > * {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .accessories-subtitle {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #d6a569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        
+        .accessories-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+        
+        .accessories-description {
+            font-size: 1rem;
+            color: #6b7280;
+            margin-bottom: 32px;
+            line-height: 1.6;
+            max-width: 600px;
+        }
+        
+        .accessories-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #2d6cdf 0%, #1f56bf 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(45, 108, 223, 0.3);
+        }
+        
+        .accessories-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(45, 108, 223, 0.4);
+        }
+        
+        .accessories-button:active {
+            transform: translateY(0);
+        }
+        
+        .accessories-button svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+        }
+        
+        .accessories-image-mobile {
+            display: none;
+        }
+        
+        .accessories-mobile-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .accessories-section {
+                margin-top: 40px;
+                padding: 24px 0;
+                display: flex;
+                flex-direction: column;
+                background: #F5F5F7;
+            }
+            
+            .accessories-section::before {
+                display: none;
+            }
+            
+            .accessories-section::after {
+                display: none;
+            }
+            
+            .accessories-content {
+                max-width: 100%;
+                padding: 0 24px;
+                margin-bottom: 0;
+                order: 1;
+                text-align: center;
+            }
+            
+            .accessories-image-mobile {
+                display: block;
+                width: 100%;
+                margin-top: 0;
+                order: 2;
+                overflow: hidden;
+                height: 300px;
+            }
+            
+            .accessories-mobile-img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: 25% 20%;
+            }
+            
+            .accessories-title {
+                font-size: 1.5rem;
+            }
+            
+            .accessories-description {
+                font-size: 0.9375rem;
+                margin-bottom: 24px;
+            }
+            
+            .accessories-button {
+                padding: 12px 24px;
+                font-size: 0.9375rem;
+            }
+        }
+        
         .sr-only {
             position: absolute;
             width: 1px;
@@ -3150,22 +3682,139 @@
         }
         
         @media (max-width: 968px) {
+            .container {
+                padding: 10px;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                overflow-x: hidden;
+            }
+            
+            .product-detail-page {
+                width: 100%;
+                max-width: 100%;
+                padding: 0;
+                margin: 0;
+                box-sizing: border-box;
+                overflow-x: hidden;
+            }
+            
             .product-detail-content {
                 grid-template-columns: 1fr;
-                gap: 30px;
+                gap: 20px;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                overflow-x: hidden;
             }
             
             .product-detail-images {
                 position: relative;
                 top: 0;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                overflow-x: hidden;
+            }
+            
+            .product-detail-images-sticky {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .product-images-container {
+                flex-direction: column;
+                gap: 12px;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                overflow-x: hidden;
+            }
+            
+            .product-thumbnails-carousel {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                max-width: 100%;
+                max-height: 80px;
+                overflow-x: auto;
+                overflow-y: hidden;
+                padding-bottom: 8px;
+                gap: 8px;
+                box-sizing: border-box;
+            }
+            
+            .thumbnails-wrapper {
+                flex-direction: row;
+                gap: 8px;
+            }
+            
+            .thumbnail-item {
+                width: 70px;
+                height: 70px;
+                flex-shrink: 0;
             }
             
             .product-detail-title {
-                font-size: 2rem;
+                font-size: 1.5rem;
+                font-weight: 500;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                letter-spacing: -0.02em;
             }
             
             .top-specifications {
                 flex-wrap: wrap;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .product-image-carousel-detail {
+                max-width: 100%;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .product-detail-info {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                overflow-x: hidden;
+            }
+            
+            .product-detail-info > * {
+                max-width: 100%;
+                box-sizing: border-box;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+            }
+            
+            .btn-add-to-cart-detail {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+            
+            .product-description,
+            .product-specifications,
+            .product-description-spoiler,
+            .product-specifications-spoiler,
+            .top-specifications,
+            table,
+            .product-variants {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                overflow-x: auto;
+            }
+            
+            .product-detail-recommendations {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                overflow-x: hidden;
             }
             
             .product-image-carousel-detail .image-nav {
@@ -4619,7 +5268,7 @@
                 <a href="#" onclick="loadGuaranteePage(); return false;">Гарантия</a>
                 <a href="#" onclick="loadDeliveryPage(); return false;">Доставка и оплата</a>
                 <a href="#contacts" onclick="document.querySelector('.about-footer')?.scrollIntoView({behavior: 'smooth'}); return false;">Контакты</a>
-                <a href="https://t.me/yo_feedback" target="_blank">Отзывы</a>
+                <a href="#" onclick="loadReviewsPage(); return false;">Отзывы</a>
                 <a href="https://t.me/yo_price" target="_blank">Telegram</a>
             </div>
             <div class="header-main">
@@ -4645,7 +5294,7 @@
                     <a href="#" class="quick-menu-item" onclick="searchProducts('Apple Watch'); return false;">Apple Watch</a>
                     <a href="#" class="quick-menu-item" onclick="searchProducts('Dyson'); return false;">Dyson</a>
                     <a href="#" class="quick-menu-item" onclick="searchProducts('Galaxy'); return false;">Galaxy</a>
-                    <a href="#" class="quick-menu-item" onclick="searchProducts('Whoop'); return false;">Whoop</a>
+                    <a href="#" class="quick-menu-item" onclick="loadProductsByBrand('Whoop', 'Умные браслеты'); return false;">Whoop</a>
                     <a href="#" class="quick-menu-item" onclick="loadProductsByBrand('Sony', 'Игровые приставки'); return false;">Playstation</a>
                 </div>
                 <button class="cart-icon-btn-header" onclick="openCart()" aria-label="Корзина">
@@ -4804,7 +5453,7 @@
                 <ul class="about-list">
                     <li><a href="#" onclick="loadGuaranteePage(); return false;" style="color: #444; text-decoration: none;">Гарантия</a></li>
                     <li><a href="#" onclick="loadDeliveryPage(); return false;" style="color: #444; text-decoration: none;">Доставка и оплата</a></li>
-                    <li><a href="https://t.me/yo_feedback" target="_blank" style="color: #444; text-decoration: none;">Отзывы</a></li>
+                    <li><a href="#" onclick="loadReviewsPage(); return false;" style="color: #444; text-decoration: none;">Отзывы</a></li>
                 </ul>
             </div>
         </div>
@@ -5173,13 +5822,13 @@
                 const brand = String(brandName || '').toLowerCase().trim();
                 // Специальный размер для whoop
                 if (brand === 'whoop') {
-                    return `<img src="${iconUrl}" alt="${brandName}" style="height: 24px; width: auto; max-width: 70px; object-fit: contain; display: block;">`;
+                    return `<img src="${iconUrl}" alt="${brandName}" style="height: 18px; width: auto; max-width: 60px; object-fit: contain; display: block;">`;
                 }
                 // Специальный размер для yandex
                 if (brand === 'yandex') {
-                    return `<img src="${iconUrl}" alt="${brandName}" class="yandex-brand-icon" style="height: 20px; width: auto; max-width: 80px; object-fit: contain; display: block;">`;
+                    return `<img src="${iconUrl}" alt="${brandName}" class="yandex-brand-icon" style="height: 16px; width: auto; max-width: 70px; object-fit: contain; display: block;">`;
                 }
-                return `<img src="${iconUrl}" alt="${brandName}" style="height: 28px; width: auto; max-width: 100px; object-fit: contain; display: block;">`;
+                return `<img src="${iconUrl}" alt="${brandName}" style="height: 20px; width: auto; max-width: 80px; object-fit: contain; display: block;">`;
             }
             return `<span class="brand-name">${brandName}</span>`;
         }
@@ -5373,6 +6022,8 @@
                     loadGuaranteePage();
                 } else if (stateRestored && currentView === 'delivery') {
                     loadDeliveryPage();
+                } else if (stateRestored && currentView === 'reviews') {
+                    loadReviewsPage();
                 } else if (stateRestored && currentBrandFilter) {
                     // Если был выбран бренд, загружаем товары бренда
                     loadProductsByBrand(currentBrandFilter, currentLevel0Filter);
@@ -5429,6 +6080,8 @@
                             loadGuaranteePage();
                         } else if (currentView === 'delivery') {
                             loadDeliveryPage();
+                        } else if (currentView === 'reviews') {
+                            loadReviewsPage();
                         } else if (currentBrandFilter) {
                             loadProductsByBrand(currentBrandFilter, currentLevel0Filter);
                         } else if (currentCategoryId) {
@@ -5673,7 +6326,7 @@
                                 <div class="category-name">Контакты</div>
                             </div>
                         </button>
-                        <button class="catalog-dropdown-item catalog-section-item" onclick="event.stopPropagation(); closeCatalogDropdown(); window.open('https://t.me/yo_feedback', '_blank');">
+                        <button class="catalog-dropdown-item catalog-section-item" onclick="event.stopPropagation(); closeCatalogDropdown(); loadReviewsPage();">
                             <div class="category-icon">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
@@ -5925,9 +6578,6 @@
             // Reload categories to show fresh data
             loadCategories();
             
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            
             console.log('✅ Home page loaded');
         }
         
@@ -6006,7 +6656,6 @@
                     </div>
                 </div>
             `;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         
         // Load delivery page
@@ -6092,7 +6741,123 @@
                     </div>
                 </div>
             `;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Load reviews page
+        function loadReviewsPage() {
+            currentView = 'reviews';
+            pushHistoryState('reviews', {});
+            saveAppState();
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                <button class="back-button" onclick="goToHomePage()">← Назад на главную</button>
+                <div style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+                    <h1 style="font-size: 28px; font-weight: 700; margin-bottom: 30px; text-align: center; color: #111827; display: flex; align-items: center; justify-content: center; gap: 12px;">
+                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2d6cdf" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
+                        Отзывы
+                    </h1>
+                    
+                    <div class="reviews-telegram-link" style="background: white; border-radius: 16px; padding: 24px; margin-bottom: 40px; border: 1px solid rgba(229, 231, 235, 0.6); box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+                            <div style="flex: 1; min-width: 250px;">
+                                <h2 style="color: #111827; font-size: 1.25rem; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 10px;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="color: #2d6cdf;">
+                                        <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.12l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+                                    </svg>
+                                    Больше наших отзывов
+                                </h2>
+                                <p style="color: #6b7280; font-size: 0.9375rem; margin: 0; line-height: 1.5;">Читайте реальные отзывы от наших клиентов в Telegram-канале</p>
+                            </div>
+                            <a href="https://t.me/yo_feedback" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; background: #2d6cdf; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1rem; transition: all 0.3s ease; white-space: nowrap;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.12l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+                                </svg>
+                                Открыть канал
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="reviews-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 24px; margin-bottom: 40px;">
+                        <div class="review-card" style="background: transparent; border-radius: 16px; padding: 0; box-shadow: none; transition: all 0.3s ease; overflow: hidden;">
+                            <img src="/static/reviews/Screenshot 2025-11-28 at 17.28.22.png" alt="Отзыв 1" style="width: 100%; height: auto; display: block; object-fit: contain; border-radius: 12px;">
+                        </div>
+                        <div class="review-card" style="background: transparent; border-radius: 16px; padding: 0; box-shadow: none; transition: all 0.3s ease; overflow: hidden;">
+                            <img src="/static/reviews/Screenshot 2025-11-28 at 17.28.04.png" alt="Отзыв 3" style="width: 100%; height: auto; display: block; object-fit: contain; border-radius: 12px;">
+                        </div>
+                        <div class="review-card" style="background: transparent; border-radius: 16px; padding: 0; box-shadow: none; transition: all 0.3s ease; overflow: hidden;">
+                            <img src="/static/reviews/Screenshot 2025-11-28 at 17.27.59.png" alt="Отзыв 4" style="width: 100%; height: auto; display: block; object-fit: contain; border-radius: 12px;">
+                        </div>
+                        <div class="review-card" style="background: transparent; border-radius: 16px; padding: 0; box-shadow: none; transition: all 0.3s ease; overflow: hidden;">
+                            <img src="/static/reviews/Screenshot 2025-11-28 at 17.27.56.png" alt="Отзыв 5" style="width: 100%; height: auto; display: block; object-fit: contain; border-radius: 12px;">
+                        </div>
+                        <div class="review-card" style="background: transparent; border-radius: 16px; padding: 0; box-shadow: none; transition: all 0.3s ease; overflow: hidden;">
+                            <img src="/static/reviews/Screenshot 2025-11-28 at 17.27.49.png" alt="Отзыв 6" style="width: 100%; height: auto; display: block; object-fit: contain; border-radius: 12px;">
+                        </div>
+                        <div class="review-card" style="background: transparent; border-radius: 16px; padding: 0; box-shadow: none; transition: all 0.3s ease; overflow: hidden;">
+                            <img src="/static/reviews/Screenshot 2025-11-28 at 17.27.46.png" alt="Отзыв 7" style="width: 100%; height: auto; display: block; object-fit: contain; border-radius: 12px;">
+                        </div>
+                        <div class="review-card" style="background: transparent; border-radius: 16px; padding: 0; box-shadow: none; transition: all 0.3s ease; overflow: hidden;">
+                            <img src="/static/reviews/Screenshot 2025-11-28 at 17.27.38.png" alt="Отзыв 8" style="width: 100%; height: auto; display: block; object-fit: contain; border-radius: 12px;">
+                        </div>
+                        <div class="review-card" style="background: transparent; border-radius: 16px; padding: 0; box-shadow: none; transition: all 0.3s ease; overflow: hidden;">
+                            <img src="/static/reviews/Screenshot 2025-11-28 at 17.27.32.png" alt="Отзыв 9" style="width: 100%; height: auto; display: block; object-fit: contain; border-radius: 12px;">
+                        </div>
+                        <div class="review-card" style="background: transparent; border-radius: 16px; padding: 0; box-shadow: none; transition: all 0.3s ease; overflow: hidden;">
+                            <img src="/static/reviews/Screenshot 2025-11-28 at 17.27.25.png" alt="Отзыв 10" style="width: 100%; height: auto; display: block; object-fit: contain; border-radius: 12px;">
+                        </div>
+                        <div class="review-card" style="background: transparent; border-radius: 16px; padding: 0; box-shadow: none; transition: all 0.3s ease; overflow: hidden;">
+                            <img src="/static/reviews/Screenshot 2025-11-28 at 17.28.10.png" alt="Отзыв 2" style="width: 100%; height: auto; display: block; object-fit: contain; border-radius: 12px;">
+                        </div>
+                    </div>
+                </div>
+                
+                <style>
+                    .review-card {
+                        cursor: pointer;
+                    }
+                    
+                    .review-card:hover {
+                        transform: translateY(-4px);
+                    }
+                    
+                    .review-card img {
+                        transition: transform 0.3s ease;
+                    }
+                    
+                    .review-card:hover img {
+                        transform: scale(1.02);
+                    }
+                    
+                    .reviews-telegram-link a:hover {
+                        background: #2563eb !important;
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 12px rgba(45, 108, 223, 0.3);
+                    }
+                    
+                    @media screen and (max-width: 768px) {
+                        .reviews-grid {
+                            grid-template-columns: 1fr !important;
+                            gap: 16px !important;
+                        }
+                        
+                        .reviews-telegram-link {
+                            padding: 20px 16px !important;
+                        }
+                        
+                        .reviews-telegram-link > div {
+                            flex-direction: column !important;
+                            align-items: flex-start !important;
+                        }
+                        
+                        .reviews-telegram-link a {
+                            width: 100%;
+                            justify-content: center;
+                        }
+                    }
+                </style>
+            `;
         }
         
         // Load categories with brands inside
@@ -6133,7 +6898,7 @@
                             <div class="promo-banner promo-banner-iphone17" onclick="loadProductsWithFilters('Apple', 'Смартфоны', '17 Series', null);">
                                 <div class="promo-banner-content">
                                     <div class="promo-text">
-                                        <div class="promo-badge">Новинка</div>
+                                        <div class="promo-badge">Хит продаж</div>
                                         <div class="promo-title">iPhone 17 Pro</div>
                                         <div class="promo-subtitle">Новейший iPhone с максимальными возможностями</div>
                                     </div>
@@ -6147,7 +6912,7 @@
                             <div class="promo-banner promo-banner-2" onclick="loadProductsWithFilters('Apple', 'Наушники', null, 'AirPods Pro 3');">
                                 <div class="promo-banner-content">
                                     <div class="promo-text">
-                                        <div class="promo-badge">Новинка</div>
+                                        <div class="promo-badge">Хит продаж</div>
                                         <div class="promo-title">AirPods Pro 3</div>
                                         <div class="promo-subtitle">Превосходное качество звука и комфорт</div>
                                     </div>
@@ -6597,6 +7362,14 @@
                 currentCategoryId = categoryId;
                 
                 const content = document.getElementById('content');
+                if (!content) {
+                    console.error('Content element not found');
+                    return;
+                }
+                // Полностью очищаем контент перед загрузкой новой страницы
+                content.innerHTML = '';
+                // Прокрутка в начало перед загрузкой нового контента
+                window.scrollTo(0, 0);
                 content.innerHTML = `
                     <div class="subcategories-grid">
                         ${brandData.map(subcat => `
@@ -6649,6 +7422,14 @@
                 const products = await response.json();
                 
                 const content = document.getElementById('content');
+                if (!content) {
+                    console.error('Content element not found');
+                    return;
+                }
+                // Полностью очищаем контент перед загрузкой новой страницы
+                content.innerHTML = '';
+                // Прокрутка в начало перед загрузкой нового контента
+                window.scrollTo(0, 0);
                 content.innerHTML = `
                     <div class="products-grid">
                         ${products.map(product => {
@@ -6673,6 +7454,7 @@
                     await initializeDefaultColors();
                     await loadDefaultImages();
                 }, 100);
+                
             } catch (error) {
                 showError('Ошибка загрузки товаров');
             }
@@ -6768,7 +7550,89 @@
                 
                 const welcome = getCategoryBrandWelcome(categoryLevel0, brand);
                 
+                const accessoriesHTML = (brand && brand.toLowerCase() === 'apple' && categoryLevel0 === 'Смартфоны') ? `
+                    <div class="accessories-section">
+                        <div class="accessories-content">
+                            <div class="accessories-subtitle">Аксессуары для iPhone</div>
+                            <h2 class="accessories-title">Пристегните магнитный чехол, кошелек или и то, и другое</h2>
+                            <p class="accessories-description">Яркая коллекция аксессуаров для легкого подключения и быстрой беспроводной зарядки. Бесконечное множество вариантов комбинирования, которые подойдут к любому стилю.</p>
+                            <button class="accessories-button" onclick="loadProductsByBrand('Apple', 'Аксессуары'); return false;">
+                                <span>Купить</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="accessories-image-mobile">
+                            <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/aalp-magsafe-strap-header-202509?wid=2880&hei=960&fmt=png-alpha&.v=Mm9DK3AvM1grOWszVnpva1dlSzNtV3R0b05sQ1NuV1p4c3RIT0dCTUxaZ1RxYlRNdkVncHhLL2gwSGxuVWk0TnV5NVU0QmM2b3hmeWJWTTVtN1o5ZmxuM1RUbEtLZ0RVenJDc2UxZ2xVSGQrYWpGdS9XeFgvbS9ITnNYOEhYaG4" alt="Аксессуары для iPhone" class="accessories-mobile-img">
+                        </div>
+                    </div>
+                ` : '';
+                
+                const benefitsHTML = (brand && brand.toLowerCase() === 'whoop') ? `
+                    <div class="product-benefits-section">
+                        <div class="benefits-header">
+                            <h2 class="benefits-title">Преимущества нового поколения.</h2>
+                            <p class="benefits-subtitle">Ни одно другое носимое устройство не даст вам более полного представления о вашем здоровье и физической форме.</p>
+                        </div>
+                        <div class="benefits-cards-container">
+                            <div class="benefits-cards">
+                                <div class="benefit-card">
+                                    <div class="benefit-icon">
+                                        <img src="https://appletrade.ru/img/46200189_538_q70.webp" alt="Оцените свое самочувствие" />
+                                    </div>
+                                    <h3 class="benefit-card-title">Оцените свое самочувствие</h3>
+                                    <p class="benefit-card-text">Сон, нагрузка и восстановление.</p>
+                                </div>
+                                <div class="benefit-card">
+                                    <div class="benefit-icon">
+                                        <img src="https://appletrade.ru/img/46200353_538_q70.webp" alt="Оставайтесь в форме много лет" />
+                                    </div>
+                                    <h3 class="benefit-card-title">Оставайтесь в форме много лет</h3>
+                                    <p class="benefit-card-text">Healthspan – это мощный способ количественной оценки вашего возраста и замедления темпов старения.</p>
+                                </div>
+                                <div class="benefit-card">
+                                    <div class="benefit-icon">
+                                        <img src="https://appletrade.ru/img/46200367_538_q70.webp" alt="Оптимизируйте ваш сон" />
+                                    </div>
+                                    <h3 class="benefit-card-title">Оптимизируйте ваш сон</h3>
+                                    <p class="benefit-card-text">Выбирайте оптимальное время отдыха ко сну и пробуждению.</p>
+                                </div>
+                                <div class="benefit-card">
+                                    <div class="benefit-icon">
+                                        <img src="https://appletrade.ru/img/46200371_538_q70.webp" alt="Изменяйте эффект от тренировки" />
+                                    </div>
+                                    <h3 class="benefit-card-title">Изменяйте эффект от тренировки</h3>
+                                    <p class="benefit-card-text">Оцените ваше состояние во время любых тренировок и занятий.</p>
+                                </div>
+                                <div class="benefit-card">
+                                    <div class="benefit-icon">
+                                        <img src="https://appletrade.ru/img/46200413_538_q70.webp" alt="Изменения ЭКГ прямо с запястья" />
+                                    </div>
+                                    <h3 class="benefit-card-title">Изменения ЭКГ прямо с запястья</h3>
+                                    <p class="benefit-card-text">Будьте в курсе состояния вашего сердца 24/7.</p>
+                                </div>
+                                <div class="benefit-card">
+                                    <div class="benefit-icon">
+                                        <img src="https://appletrade.ru/img/46200433_538_q70.webp" alt="Измеряйте артериальное давление" />
+                                    </div>
+                                    <h3 class="benefit-card-title">Измеряйте артериальное давление</h3>
+                                    <p class="benefit-card-text">Ежедневно измеряйте состояние своего артериального давления.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ` : '';
+                
                 const content = document.getElementById('content');
+                if (!content) {
+                    console.error('Content element not found');
+                    return;
+                }
+                // Полностью очищаем контент перед загрузкой новой страницы
+                content.innerHTML = '';
+                // Прокрутка в начало перед загрузкой нового контента
+                window.scrollTo(0, 0);
                 content.innerHTML = `
                     <div class="breadcrumbs" id="breadcrumbsContainer">
                         ${createBreadcrumbs(brand)}
@@ -6786,6 +7650,8 @@
                             return createProductCard(product);
                         }).join('')}
                     </div>
+                    ${accessoriesHTML}
+                    ${benefitsHTML}
                 `;
                 
                 // Добавляем плавную анимацию появления для товаров
@@ -6858,6 +7724,7 @@
                         // Инициализируем поддержку свайпов для новых каруселей
                         initializeSwipeSupport();
                     }, 100);
+                    
                 }
             } catch (error) {
                 showError('Ошибка поиска');
@@ -7031,7 +7898,70 @@
                 
                 const welcome = getCategoryBrandWelcome(level0, brand);
                 
+                const benefitsHTML = (brand && brand.toLowerCase() === 'whoop') ? `
+                    <div class="product-benefits-section">
+                        <div class="benefits-header">
+                            <h2 class="benefits-title">Преимущества нового поколения.</h2>
+                            <p class="benefits-subtitle">Ни одно другое носимое устройство не даст вам более полного представления о вашем здоровье и физической форме.</p>
+                        </div>
+                        <div class="benefits-cards-container">
+                            <div class="benefits-cards">
+                                <div class="benefit-card">
+                                    <div class="benefit-icon">
+                                        <img src="https://appletrade.ru/img/46200189_538_q70.webp" alt="Оцените свое самочувствие" />
+                                    </div>
+                                    <h3 class="benefit-card-title">Оцените свое самочувствие</h3>
+                                    <p class="benefit-card-text">Сон, нагрузка и восстановление.</p>
+                                </div>
+                                <div class="benefit-card">
+                                    <div class="benefit-icon">
+                                        <img src="https://appletrade.ru/img/46200353_538_q70.webp" alt="Оставайтесь в форме много лет" />
+                                    </div>
+                                    <h3 class="benefit-card-title">Оставайтесь в форме много лет</h3>
+                                    <p class="benefit-card-text">Healthspan – это мощный способ количественной оценки вашего возраста и замедления темпов старения.</p>
+                                </div>
+                                <div class="benefit-card">
+                                    <div class="benefit-icon">
+                                        <img src="https://appletrade.ru/img/46200367_538_q70.webp" alt="Оптимизируйте ваш сон" />
+                                    </div>
+                                    <h3 class="benefit-card-title">Оптимизируйте ваш сон</h3>
+                                    <p class="benefit-card-text">Выбирайте оптимальное время отдыха ко сну и пробуждению.</p>
+                                </div>
+                                <div class="benefit-card">
+                                    <div class="benefit-icon">
+                                        <img src="https://appletrade.ru/img/46200371_538_q70.webp" alt="Изменяйте эффект от тренировки" />
+                                    </div>
+                                    <h3 class="benefit-card-title">Изменяйте эффект от тренировки</h3>
+                                    <p class="benefit-card-text">Оцените ваше состояние во время любых тренировок и занятий.</p>
+                                </div>
+                                <div class="benefit-card">
+                                    <div class="benefit-icon">
+                                        <img src="https://appletrade.ru/img/46200413_538_q70.webp" alt="Изменения ЭКГ прямо с запястья" />
+                                    </div>
+                                    <h3 class="benefit-card-title">Изменения ЭКГ прямо с запястья</h3>
+                                    <p class="benefit-card-text">Будьте в курсе состояния вашего сердца 24/7.</p>
+                                </div>
+                                <div class="benefit-card">
+                                    <div class="benefit-icon">
+                                        <img src="https://appletrade.ru/img/46200433_538_q70.webp" alt="Измеряйте артериальное давление" />
+                                    </div>
+                                    <h3 class="benefit-card-title">Измеряйте артериальное давление</h3>
+                                    <p class="benefit-card-text">Ежедневно измеряйте состояние своего артериального давления.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ` : '';
+                
                 const content = document.getElementById('content');
+                if (!content) {
+                    console.error('Content element not found');
+                    return;
+                }
+                // Полностью очищаем контент перед загрузкой новой страницы
+                content.innerHTML = '';
+                // Прокрутка в начало перед загрузкой нового контента
+                window.scrollTo(0, 0);
                 content.innerHTML = `
                     <div class="breadcrumbs" id="breadcrumbsContainer">
                         ${createBreadcrumbs(brand)}
@@ -7049,6 +7979,7 @@
                             return createProductCard(product);
                         }).join('')}
                     </div>
+                    ${benefitsHTML}
                 `;
                 
                 // Добавляем плавную анимацию появления для товаров
@@ -7243,6 +8174,9 @@
                 let selectedScreen = selectedVariants.screen || '';
                 let selectedCapacity = selectedVariants.capacity || '';
                 
+                // Флаг, указывающий, был ли цвет явно выбран пользователем
+                const hasExplicitColor = !!selectedVariants.color;
+                
                 // Проверяем, что выбранные варианты доступны, иначе используем первый доступный
                 if (selectedMemory && !memories.includes(selectedMemory)) {
                     selectedMemory = memories.length > 0 ? memories[0] : '';
@@ -7335,6 +8269,13 @@
                 // Определяем первый доступный вариант
                 const firstVariant = matchingVariant || variantsData.variants[0] || null;
                 
+                // Определяем название для заголовка: используем название выбранного SKU, если есть
+                const displayTitle = (matchingVariant && matchingVariant.name) 
+                    ? matchingVariant.name 
+                    : (firstVariant && firstVariant.name) 
+                        ? firstVariant.name 
+                        : modelName;
+                
                 // Находим цену для выбранного варианта
                 let selectedPrice = product.price;
                 let selectedOldPrice = product.old_price;
@@ -7355,6 +8296,14 @@
                 }
                 
                 const content = document.getElementById('content');
+                if (!content) {
+                    console.error('Content element not found');
+                    return;
+                }
+                // Полностью очищаем контент перед загрузкой новой страницы
+                content.innerHTML = '';
+                // Прокрутка в начало перед загрузкой нового контента
+                window.scrollTo(0, 0);
                 content.innerHTML = `
                     <div class="breadcrumbs" id="breadcrumbsContainer">
                         <div class="breadcrumb-trail">
@@ -7367,21 +8316,38 @@
                     </div>
                     
                     <div class="product-detail-page">
-                        <h1 class="product-detail-title">${modelName}</h1>
+                        <h1 class="product-detail-title">${displayTitle}</h1>
                         
                         <div class="product-detail-content">
                             <div class="product-detail-images">
                                 <div class="product-detail-images-sticky">
-                                    <div class="product-image-carousel-detail" data-product-id="${product.id}">
-                                        <img alt="${modelName}" class="product-img-detail" style="opacity: 0;">
-                                        <div class="image-placeholder loading-placeholder"><img src="/static/images/logo.jpg" alt="Loading..."></div>
-                                        <div class="image-indicators">
-                                            ${product.images && product.images.length > 0 ? product.images.map((_, index) => 
-                                                `<span class="indicator ${index === 0 ? 'active' : ''}" data-index="${index}"></span>`
-                                            ).join('') : '<span class="indicator active" data-index="0"></span>'}
+                                    <div class="product-images-container">
+                                        ${product.images && product.images.length > 1 ? `
+                                        <div class="product-thumbnails-carousel">
+                                            <div class="thumbnails-wrapper">
+                                                ${product.images.map((img, index) => {
+                                                    // Если цвет был явно выбран пользователем, скрываем миниатюры до загрузки правильных изображений
+                                                    const shouldHide = hasExplicitColor;
+                                                    return `
+                                                    <div class="thumbnail-item ${index === 0 ? 'active' : ''}" onclick="selectThumbnail(${product.id}, ${index})" data-index="${index}">
+                                                        <img src="${shouldHide ? '' : img}" alt="${modelName} - фото ${index + 1}" style="${shouldHide ? 'opacity: 0;' : ''}" onerror="this.src='/static/images/logo.jpg'">
+                                                    </div>
+                                                `;
+                                                }).join('')}
+                                            </div>
                                         </div>
-                                        <div class="image-nav prev" onclick="changeImageWithSlide(${product.id}, -1)" style="display: ${product.images && product.images.length > 1 ? 'flex' : 'none'}; opacity: 1 !important; visibility: visible !important; z-index: 200 !important;">‹</div>
-                                        <div class="image-nav next" onclick="changeImageWithSlide(${product.id}, 1)" style="display: ${product.images && product.images.length > 1 ? 'flex' : 'none'}; opacity: 1 !important; visibility: visible !important; z-index: 200 !important;">›</div>
+                                        ` : ''}
+                                        <div class="product-image-carousel-detail" data-product-id="${product.id}">
+                                            <img alt="${modelName}" class="product-img-detail" style="opacity: 0;">
+                                            <div class="image-placeholder loading-placeholder" style="${hasExplicitColor ? 'display: block;' : ''}"><img src="/static/images/logo.jpg" alt="Loading..."></div>
+                                            <div class="image-indicators">
+                                                ${product.images && product.images.length > 0 ? product.images.map((_, index) => 
+                                                    `<span class="indicator ${index === 0 ? 'active' : ''}" data-index="${index}"></span>`
+                                                ).join('') : '<span class="indicator active" data-index="0"></span>'}
+                                            </div>
+                                            <div class="image-nav prev" onclick="changeImageWithSlide(${product.id}, -1)" style="display: ${product.images && product.images.length > 1 ? 'flex' : 'none'}; opacity: 1 !important; visibility: visible !important; z-index: 200 !important;">‹</div>
+                                            <div class="image-nav next" onclick="changeImageWithSlide(${product.id}, 1)" style="display: ${product.images && product.images.length > 1 ? 'flex' : 'none'}; opacity: 1 !important; visibility: visible !important; z-index: 200 !important;">›</div>
+                                        </div>
                                     </div>
                                 </div>
                                 
@@ -7562,8 +8528,13 @@
                         const img = carousel.querySelector('.product-img-detail');
                         const placeholder = carousel.querySelector('.loading-placeholder');
                         
-                        // Если выбран цвет, обновляем изображение по цвету
-                        if (selectedColor) {
+                        // Если цвет был явно выбран, загружаем изображения для этого цвета
+                        // и не показываем базовые изображения
+                        if (hasExplicitColor && selectedColor) {
+                            // Показываем placeholder пока загружаются изображения выбранного цвета
+                            if (placeholder) {
+                                placeholder.style.display = 'block';
+                            }
                             await updateProductImage(product.id, selectedColor, { waitForLoad: true });
                         } else if (product.images && product.images.length > 0 && img) {
                             // Если цвета нет, просто показываем первое изображение
@@ -8190,6 +9161,12 @@
                             oldPriceElement.style.display = 'inline';
                         } else if (oldPriceElement) {
                             oldPriceElement.style.display = 'none';
+                        }
+                        
+                        // Обновляем заголовок с названием выбранного SKU
+                        const titleElement = document.querySelector('.product-detail-title');
+                        if (titleElement && matchingVariant.name) {
+                            titleElement.textContent = matchingVariant.name;
                         }
                     }
                 }
@@ -8881,9 +9858,9 @@
             } else if (isDetailPage) {
                 // Детальная страница
                 container = document.querySelector('.product-detail-page');
-                // Получаем модель из заголовка или из данных
-                const titleElement = container?.querySelector('.product-detail-title');
-                brandModel = titleElement?.textContent?.trim() || null;
+                // Используем оригинальное название модели из глобальной переменной, а не из заголовка
+                // (заголовок теперь содержит полное название SKU)
+                brandModel = currentProductModelName || null;
             }
             
             if (!container) {
@@ -8945,6 +9922,26 @@
                         loadingPlaceholder.style.display = 'block';
                     }
 
+                    // Получаем контейнер миниатюр ДО обновления основного изображения
+                    const imagesContainer = container.querySelector('.product-images-container');
+                    const thumbnailsCarousel = imagesContainer?.querySelector('.product-thumbnails-carousel');
+                    const thumbnailsWrapper = thumbnailsCarousel?.querySelector('.thumbnails-wrapper');
+                    const thumbnailItems = thumbnailsWrapper ? thumbnailsWrapper.querySelectorAll('.thumbnail-item') : [];
+                    
+                    // Скрываем старые изображения перед загрузкой новых
+                    const mainImg = carousel.querySelector('.product-img') || carousel.querySelector('.product-img-detail');
+                    if (mainImg) {
+                        mainImg.style.opacity = '0';
+                    }
+                    
+                    // Скрываем все старые миниатюры
+                    if (thumbnailsWrapper) {
+                        const oldThumbnailImgs = thumbnailsWrapper.querySelectorAll('.thumbnail-item img');
+                        oldThumbnailImgs.forEach(img => {
+                            img.style.opacity = '0';
+                        });
+                    }
+                    
                     // Проверяем, есть ли уже структура слайдов
                     let slideContainer = carousel.querySelector('.image-slide-container');
                     
@@ -8967,7 +9964,19 @@
                             const img = document.createElement('img');
                             img.src = imageSrc;
                             img.alt = `Product image ${index + 1}`;
-                            img.style.opacity = index === 0 ? '1' : '0';
+                            img.style.opacity = '0'; // Начинаем с прозрачного
+                            
+                            // Показываем изображение после загрузки
+                            img.onload = function() {
+                                if (index === 0) {
+                                    this.style.opacity = '1';
+                                }
+                            };
+                            
+                            // Если изображение уже в кэше
+                            if (img.complete && index === 0) {
+                                img.style.opacity = '1';
+                            }
                             
                             slideItem.appendChild(img);
                             slideWrapper.appendChild(slideItem);
@@ -8976,17 +9985,61 @@
                         // Сбрасываем позицию слайдера на первое изображение
                         slideWrapper.style.transform = 'translateX(0%)';
                         
+                        // Одновременно обновляем миниатюры
+                        if (thumbnailsWrapper) {
+                            if (thumbnailItems.length !== timestampedPaths.length) {
+                                thumbnailsWrapper.innerHTML = timestampedPaths.map((imgSrc, index) => `
+                                    <div class="thumbnail-item ${index === 0 ? 'active' : ''}" onclick="selectThumbnail(${productId}, ${index})" data-index="${index}">
+                                        <img src="${imgSrc}" alt="${brandModel} - фото ${index + 1}" onerror="this.src='/static/images/logo.jpg'">
+                                    </div>
+                                `).join('');
+                            } else {
+                                // Собираем все элементы изображений и их новые src
+                                const updates = Array.from(thumbnailItems)
+                                    .map((item, index) => ({
+                                        img: item.querySelector('img'),
+                                        src: timestampedPaths[index]
+                                    }))
+                                    .filter(update => update.img && update.src);
+                                
+                                // Устанавливаем все src одновременно в одном синхронном блоке
+                                // Все изменения применяются до следующего ререндера браузера
+                                updates.forEach((update, index) => {
+                                    // Убеждаемся, что изображение скрыто перед обновлением
+                                    update.img.style.opacity = '0';
+                                    update.img.src = update.src;
+                                    
+                                    // Показываем изображение после загрузки
+                                    update.img.onload = function() {
+                                        this.style.opacity = '1';
+                                    };
+                                    
+                                    // Если изображение уже в кэше
+                                    if (update.img.complete) {
+                                        update.img.style.opacity = '1';
+                                    }
+                                });
+                            }
+                        }
+                        
                     } else {
                         // Обновляем обычное изображение (для карточки или детальной страницы)
                         const mainImg = carousel.querySelector('.product-img') || carousel.querySelector('.product-img-detail');
+                        
+                        // Одновременно обновляем основное изображение и миниатюры
                         if (mainImg && timestampedPaths[0]) {
-                            // Устанавливаем новое изображение
-                            mainImg.style.opacity = '0';
+                            // Изображение уже скрыто выше, просто обновляем src
                             mainImg.onload = () => {
                                 if (loadingPlaceholder) loadingPlaceholder.style.display = 'none';
-                            mainImg.style.opacity = '1';
+                                mainImg.style.opacity = '1';
                             };
                             mainImg.src = timestampedPaths[0];
+                            
+                            // Если изображение уже в кэше
+                            if (mainImg.complete) {
+                                if (loadingPlaceholder) loadingPlaceholder.style.display = 'none';
+                                mainImg.style.opacity = '1';
+                            }
                         } else {
                             // Попробуем создать изображение, если его нет
                             if (!mainImg && timestampedPaths[0]) {
@@ -9001,6 +10054,43 @@
                                 newImg.src = timestampedPaths[0];
                                 
                                 carousel.appendChild(newImg);
+                            }
+                        }
+                        
+                        // Одновременно обновляем миниатюры
+                        if (thumbnailsWrapper) {
+                            if (thumbnailItems.length !== timestampedPaths.length) {
+                                thumbnailsWrapper.innerHTML = timestampedPaths.map((imgSrc, index) => `
+                                    <div class="thumbnail-item ${index === 0 ? 'active' : ''}" onclick="selectThumbnail(${productId}, ${index})" data-index="${index}">
+                                        <img src="${imgSrc}" alt="${brandModel} - фото ${index + 1}" onerror="this.src='/static/images/logo.jpg'">
+                                    </div>
+                                `).join('');
+                            } else {
+                                // Собираем все элементы изображений и их новые src
+                                const updates = Array.from(thumbnailItems)
+                                    .map((item, index) => ({
+                                        img: item.querySelector('img'),
+                                        src: timestampedPaths[index]
+                                    }))
+                                    .filter(update => update.img && update.src);
+                                
+                                // Устанавливаем все src одновременно в одном синхронном блоке
+                                // Все изменения применяются до следующего ререндера браузера
+                                updates.forEach((update, index) => {
+                                    // Убеждаемся, что изображение скрыто перед обновлением
+                                    update.img.style.opacity = '0';
+                                    update.img.src = update.src;
+                                    
+                                    // Показываем изображение после загрузки
+                                    update.img.onload = function() {
+                                        this.style.opacity = '1';
+                                    };
+                                    
+                                    // Если изображение уже в кэше
+                                    if (update.img.complete) {
+                                        update.img.style.opacity = '1';
+                                    }
+                                });
                             }
                         }
                     }
@@ -9060,6 +10150,18 @@
                     
                     // Сохранить пути для changeImage функции
                     window[`${productId}-${selectedColor}`] = timestampedPaths;
+                    
+                    // Обновить активное состояние миниатюр после обновления всех изображений
+                    if (thumbnailsWrapper) {
+                        const updatedThumbnailItems = thumbnailsWrapper.querySelectorAll('.thumbnail-item');
+                        updatedThumbnailItems.forEach((item, index) => {
+                            if (index === 0) {
+                                item.classList.add('active');
+                            } else {
+                                item.classList.remove('active');
+                            }
+                        });
+                    }
                 }
                 
                 console.log(`✅ Обновлены изображения для ${brandModel} цвета ${selectedColor}`);
@@ -10450,6 +11552,125 @@
             // Обновить активный индикатор
             currentActive.classList.remove('active');
             indicators[newIndex].classList.add('active');
+            
+            // Обновить активную миниатюру
+            const thumbnailsContainer = carousel.closest('.product-images-container');
+            if (thumbnailsContainer) {
+                const thumbnails = thumbnailsContainer.querySelectorAll('.thumbnail-item');
+                thumbnails.forEach((thumb, index) => {
+                    if (index === newIndex) {
+                        thumb.classList.add('active');
+                    } else {
+                        thumb.classList.remove('active');
+                    }
+                });
+            }
+        }
+        
+        // Функция для выбора миниатюры
+        function selectThumbnail(productId, index) {
+            const carousel = document.querySelector(`[data-product-id="${productId}"]`);
+            if (!carousel) {
+                return;
+            }
+            
+            // Найти карточку товара или детальную страницу для определения текущего цвета
+            const productCard = carousel.closest('.product-card');
+            const isDetailPage = !productCard && carousel.closest('.product-detail-page');
+            
+            let selectedColor = 'Black';
+            
+            if (productCard) {
+                const variantsContainer = productCard.querySelector('.product-variants');
+                const activeColorButton = variantsContainer?.querySelector('.variant-btn[data-type="color"].active');
+                if (activeColorButton) {
+                    selectedColor = activeColorButton.dataset.colorFolder || activeColorButton.dataset.value || activeColorButton.dataset.color || 'Black';
+                }
+            } else if (isDetailPage) {
+                const colorInput = document.querySelector('input[name="color"]:checked');
+                if (colorInput) {
+                    selectedColor = colorInput.value || 'Black';
+                }
+            }
+            
+            if (!selectedColor || selectedColor === 'undefined') {
+                selectedColor = 'Black';
+            }
+            
+            const colorImagesKey = `${productId}-${selectedColor}`;
+            const activeColorImages = window[colorImagesKey];
+            
+            if (!activeColorImages || activeColorImages.length === 0) {
+                // Если нет изображений по цвету, используем общие изображения товара
+                const product = window.productImages?.[productId];
+                if (!product || !product.images || product.images.length === 0) {
+                    return;
+                }
+                // Используем общие изображения
+                const imageSrc = product.images[index] || product.images[0];
+                const mainImg = carousel.querySelector('.product-img-detail') || carousel.querySelector('.product-img');
+                if (mainImg) {
+                    mainImg.src = imageSrc;
+                    mainImg.style.opacity = '1';
+                }
+            } else {
+                // Используем изображения для выбранного цвета
+                if (index >= activeColorImages.length) {
+                    index = activeColorImages.length - 1;
+                }
+                const imageSrc = activeColorImages[index];
+                
+                // Обновляем главное изображение
+                const slideContainer = carousel.querySelector('.image-slide-container');
+                if (slideContainer) {
+                    const slideWrapper = slideContainer.querySelector('.image-slide-wrapper');
+                    if (slideWrapper) {
+                        slideWrapper.style.transform = `translateX(-${index * 100}%)`;
+                        const slideItems = slideWrapper.querySelectorAll('.image-slide-item');
+                        slideItems.forEach((item, i) => {
+                            const img = item.querySelector('img');
+                            if (i === index) {
+                                img.style.opacity = '1';
+                                item.classList.add('fade-in');
+                            } else {
+                                img.style.opacity = '0';
+                                item.classList.remove('fade-in');
+                            }
+                        });
+                    }
+                } else {
+                    const mainImg = carousel.querySelector('.product-img-detail') || carousel.querySelector('.product-img');
+                    if (mainImg) {
+                        mainImg.src = imageSrc;
+                        mainImg.style.opacity = '1';
+                    }
+                }
+            }
+            
+            // Обновить активный индикатор
+            const indicators = carousel.querySelectorAll('.indicator');
+            indicators.forEach((indicator, i) => {
+                if (i === index) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+            
+            // Обновить активную миниатюру
+            const thumbnailsContainer = carousel.closest('.product-images-container');
+            if (thumbnailsContainer) {
+                const thumbnails = thumbnailsContainer.querySelectorAll('.thumbnail-item');
+                thumbnails.forEach((thumb, i) => {
+                    if (i === index) {
+                        thumb.classList.add('active');
+                        // Прокрутить к активной миниатюре
+                        thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    } else {
+                        thumb.classList.remove('active');
+                    }
+                });
+            }
         }
         
         // Добавляем поддержку свайпов только для мобильных устройств
