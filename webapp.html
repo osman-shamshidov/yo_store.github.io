@@ -3036,6 +3036,63 @@
             height: 85%;
             object-fit: contain;
             transition: opacity 0.3s ease;
+            transform-origin: center center;
+        }
+        
+        .product-image-carousel-detail {
+            cursor: zoom-in;
+        }
+        
+        .product-image-carousel-detail.zooming {
+            cursor: zoom-out;
+        }
+        
+        .product-image-carousel-detail.zooming .product-img-detail,
+        .product-image-carousel-detail.zooming .image-slide-item img {
+            transition: transform 0.1s ease-out;
+        }
+        
+        /* Миниатюра с индикатором */
+        .zoom-thumbnail {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            width: 120px;
+            height: 120px;
+            border: 2px solid #2d2d2d;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            z-index: 10001;
+            display: none;
+            overflow: hidden;
+        }
+        
+        .zoom-thumbnail.active {
+            display: block;
+        }
+        
+        .zoom-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .zoom-thumbnail-indicator {
+            position: absolute;
+            border: 2px solid #ff4444;
+            background: rgba(255, 68, 68, 0.2);
+            pointer-events: none;
+            box-sizing: border-box;
+        }
+        
+        @media screen and (max-width: 768px) {
+            .zoom-thumbnail {
+                width: 100px;
+                height: 100px;
+                bottom: 12px;
+                right: 12px;
+            }
         }
         
         .product-image-carousel-detail .image-nav {
@@ -4767,6 +4824,7 @@
         .cart-recommendations-list {
             position: relative;
             overflow: hidden;
+            padding-top: 3px;
         }
         
         .cart-recommendations-slider {
@@ -5432,7 +5490,7 @@
                     <div style="margin-bottom: 20px;">Телефон службы заботы, 10:00 – 21:00</div>
                     <div style="margin-top: 8px; margin-bottom: 20px;">
                         Для тех, кому удобнее общаться в мессенджерах, пишите в специальный чат<br>
-                        <a href="https://t.me/yoo_manager" target="_blank" style="color: #2d2d2d; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                        <a href="https://t.me/yoo_manager" target="_blank" style="color: #1e40af; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.12l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
                             </svg>
@@ -5441,7 +5499,7 @@
                     </div>
                     <div style="margin-top: 8px;">
                         Почта для вопросов, сотрудничества и предложений по улучшению<br>
-                        <a href="mailto:yo.store@mail.ru" style="color: #2d2d2d; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                        <a href="mailto:yo.store@mail.ru" style="color: #1e40af; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                             </svg>
@@ -5454,7 +5512,7 @@
                 <h4>Наши социальные сети</h4>
                 <div class="about-kv">
                     <div>
-                        <a href="https://t.me/yo_price" target="_blank" style="color: #2d2d2d; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                        <a href="https://t.me/yo_price" target="_blank" style="color: #1e40af; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.12l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
                             </svg>
@@ -5467,7 +5525,7 @@
                 <h4>Адрес</h4>
                 <div class="about-kv">
                     <div style="margin-bottom: 8px;">
-                        <a href="https://yandex.com/maps/-/CLvKYC66" target="_blank" style="color: #2d2d2d; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s ease;">
+                        <a href="https://yandex.com/maps/-/CLvKYC66" target="_blank" style="color: #1e40af; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s ease;">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                                 <circle cx="12" cy="10" r="3"></circle>
@@ -8589,6 +8647,9 @@
                             };
                             img.src = product.images[0];
                         }
+                        
+                        // Инициализируем зум для детальной карточки
+                        initImageZoom(carousel);
                     }
                 }, 100);
                 
@@ -10272,6 +10333,11 @@
                             }
                         });
                     }
+                    
+                    // Инициализируем зум для детальной страницы после обновления изображений
+                    if (isDetailPage && carousel.classList.contains('product-image-carousel-detail')) {
+                        initImageZoom(carousel);
+                    }
                 }
                 
                 console.log(`✅ Обновлены изображения для ${brandModel} цвета ${selectedColor}`);
@@ -10492,6 +10558,189 @@
             };
             
             return colorLabels[colorName.toLowerCase()] || colorName;
+        }
+        
+        // Инициализация зума для детальной карточки товара
+        function initImageZoom(carousel) {
+            if (!carousel) return;
+            
+            // Проверяем, не инициализирован ли уже зум
+            if (carousel.dataset.zoomInitialized === 'true') return;
+            carousel.dataset.zoomInitialized = 'true';
+            
+            // Создаем миниатюру (если еще не создана)
+            let thumbnail = carousel.querySelector('.zoom-thumbnail');
+            if (!thumbnail) {
+                thumbnail = document.createElement('div');
+                thumbnail.className = 'zoom-thumbnail';
+                const thumbnailImg = document.createElement('img');
+                const thumbnailIndicator = document.createElement('div');
+                thumbnailIndicator.className = 'zoom-thumbnail-indicator';
+                thumbnail.appendChild(thumbnailImg);
+                thumbnail.appendChild(thumbnailIndicator);
+                carousel.appendChild(thumbnail);
+            }
+            
+            const thumbnailImg = thumbnail.querySelector('img');
+            const thumbnailIndicator = thumbnail.querySelector('.zoom-thumbnail-indicator');
+            
+            let zoomLevel = 4; // Уровень увеличения
+            
+            function getCurrentImage() {
+                const mainImg = carousel.querySelector('.product-img-detail');
+                const slideItems = carousel.querySelectorAll('.image-slide-item img');
+                
+                // Проверяем основное изображение
+                if (mainImg && mainImg.style.opacity !== '0' && mainImg.src) {
+                    return mainImg;
+                }
+                
+                // Ищем активное изображение в слайдере
+                for (const img of slideItems) {
+                    if (img.style.opacity !== '0' && img.style.display !== 'none' && img.src) {
+                        return img;
+                    }
+                }
+                
+                // Возвращаем первое доступное изображение
+                return mainImg || slideItems[0];
+            }
+            
+            function getAllImages() {
+                const mainImg = carousel.querySelector('.product-img-detail');
+                const slideItems = carousel.querySelectorAll('.image-slide-item img');
+                return mainImg ? [mainImg, ...Array.from(slideItems)] : Array.from(slideItems);
+            }
+            
+            function updateZoom(e) {
+                if (!carousel.classList.contains('zooming')) return;
+                
+                const img = getCurrentImage();
+                if (!img || !img.src) return;
+                
+                const carouselRect = carousel.getBoundingClientRect();
+                const imgRect = img.getBoundingClientRect();
+                
+                // Позиция курсора относительно карусели
+                const mouseX = e.clientX - carouselRect.left;
+                const mouseY = e.clientY - carouselRect.top;
+                
+                // Позиция и размер изображения относительно карусели
+                const imgX = imgRect.left - carouselRect.left;
+                const imgY = imgRect.top - carouselRect.top;
+                const imgWidth = imgRect.width;
+                const imgHeight = imgRect.height;
+                
+                // Позиция курсора относительно изображения (0-1)
+                const relX = Math.max(0, Math.min(1, (mouseX - imgX) / imgWidth));
+                const relY = Math.max(0, Math.min(1, (mouseY - imgY) / imgHeight));
+                
+                // Вычисляем смещение для зума
+                // При scale(2) изображение увеличивается в 2 раза, центр изображения должен быть на курсоре
+                // Смещение = (позиция курсора - центр) * (zoomLevel - 1)
+                const offsetX = (relX - 0.5) * (zoomLevel - 1) * 100;
+                const offsetY = (relY - 0.5) * (zoomLevel - 1) * 100;
+                
+                // Применяем трансформацию только к текущему изображению
+                getAllImages().forEach(image => {
+                    if (image === img) {
+                        // Используем transform-origin для центрирования на курсоре
+                        image.style.transformOrigin = `${relX * 100}% ${relY * 100}%`;
+                        image.style.transform = `scale(${zoomLevel})`;
+                    } else {
+                        image.style.transform = '';
+                        image.style.transformOrigin = '';
+                    }
+                });
+                
+                // Обновляем миниатюру
+                if (img.src && img.complete) {
+                    thumbnailImg.src = img.src;
+                    thumbnail.classList.add('active');
+                    
+                    // Обновляем индикатор - показываем видимую область
+                    // При использовании transform-origin на (relX, relY) и scale(zoomLevel):
+                    // - Точка (relX, relY) остается неподвижной в контейнере
+                    // - В увеличенном изображении эта точка находится на:
+                    //   (relX * width * zoomLevel, relY * height * zoomLevel) от левого верхнего угла увеличенного изображения
+                    // - В контейнере эта точка находится на (relX * width, relY * height)
+                    // - Значит, левый верхний угол увеличенного изображения находится на:
+                    //   (relX * width) - (relX * width * zoomLevel) = relX * width * (1 - zoomLevel)
+                    // - Видимая область - это прямоугольник размером (width, height) в увеличенном изображении
+                    // - Левый верхний угол видимой области в увеличенном изображении находится на:
+                    //   max(0, relX * width * (1 - zoomLevel))
+                    // - В масштабе миниатюры (которая соответствует оригинальному изображению):
+                    //   visibleLeft = max(0, relX * thumbnailWidth * (1 - zoomLevel)) / zoomLevel
+                    
+                    const thumbnailRect = thumbnail.getBoundingClientRect();
+                    const thumbnailWidth = thumbnailRect.width;
+                    const thumbnailHeight = thumbnailRect.height;
+                    
+                    if (thumbnailWidth > 0 && thumbnailHeight > 0) {
+                        const indicatorWidth = thumbnailWidth / zoomLevel;
+                        const indicatorHeight = thumbnailHeight / zoomLevel;
+                        
+                        // Вычисляем позицию левого верхнего угла видимой области
+                        // При transform-origin на (relX, relY) и scale(zoomLevel):
+                        // - Точка (relX, relY) остается на месте в контейнере
+                        // - Видимая область - это прямоугольник размером (width/zoomLevel, height/zoomLevel) в оригинальном изображении
+                        // - Центр видимой области находится на позиции курсора (relX, relY)
+                        // - Левый верхний угол видимой области = (relX - 0.5/zoomLevel) * thumbnailWidth
+                        // Корректируем формулу для устранения смещения вправо
+                        const visibleLeft = (relX - 0.5 / zoomLevel) * thumbnailWidth - (thumbnailWidth / zoomLevel * 0.12);
+                        const visibleTop = (relY - 0.5 / zoomLevel) * thumbnailHeight - (thumbnailHeight / zoomLevel * 0.12);
+                        
+                        // Ограничиваем позицию индикатора в пределах миниатюры
+                        const clampedIndicatorX = Math.max(0, Math.min(thumbnailWidth - indicatorWidth, visibleLeft));
+                        const clampedIndicatorY = Math.max(0, Math.min(thumbnailHeight - indicatorHeight, visibleTop));
+                        
+                        thumbnailIndicator.style.left = `${clampedIndicatorX}px`;
+                        thumbnailIndicator.style.top = `${clampedIndicatorY}px`;
+                        thumbnailIndicator.style.width = `${indicatorWidth}px`;
+                        thumbnailIndicator.style.height = `${indicatorHeight}px`;
+                    }
+                }
+            }
+            
+            function resetZoom() {
+                getAllImages().forEach(img => {
+                    img.style.transform = '';
+                });
+                thumbnail.classList.remove('active');
+            }
+            
+            // Удаляем старые обработчики, если они есть
+            const oldEnterHandler = carousel._zoomEnterHandler;
+            const oldMoveHandler = carousel._zoomMoveHandler;
+            const oldLeaveHandler = carousel._zoomLeaveHandler;
+            
+            if (oldEnterHandler) carousel.removeEventListener('mouseenter', oldEnterHandler);
+            if (oldMoveHandler) carousel.removeEventListener('mousemove', oldMoveHandler);
+            if (oldLeaveHandler) carousel.removeEventListener('mouseleave', oldLeaveHandler);
+            
+            // Создаем новые обработчики
+            const enterHandler = (e) => {
+                const img = getCurrentImage();
+                if (!img || !img.src) return;
+                
+                carousel.classList.add('zooming');
+                updateZoom(e);
+            };
+            
+            const moveHandler = updateZoom;
+            const leaveHandler = () => {
+                carousel.classList.remove('zooming');
+                resetZoom();
+            };
+            
+            // Сохраняем ссылки на обработчики
+            carousel._zoomEnterHandler = enterHandler;
+            carousel._zoomMoveHandler = moveHandler;
+            carousel._zoomLeaveHandler = leaveHandler;
+            
+            carousel.addEventListener('mouseenter', enterHandler);
+            carousel.addEventListener('mousemove', moveHandler);
+            carousel.addEventListener('mouseleave', leaveHandler);
         }
         
         // Helpers to sync loaders
