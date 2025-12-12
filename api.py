@@ -57,10 +57,39 @@ def get_product_images(product, db: Session):
     # Если не нашли в specifications, ищем в таблице ProductImage по (level_2, color)
     if not images and product.level_2 and product.color:
         try:
+            # Сначала пробуем точное совпадение
             product_image = db.query(ProductImage).filter(
                 ProductImage.level_2 == product.level_2,
                 ProductImage.color == product.color
             ).first()
+            
+            # Если не нашли, пробуем нормализованный поиск
+            if not product_image:
+                all_images = db.query(ProductImage).all()
+                product_level2_normalized = product.level_2.lower().replace(' ', '').replace('-', '').replace('series', '').replace('s11', 'series11').replace('sportband', '')
+                product_color_normalized = product.color.lower().replace(' ', '').replace('-', '').replace('/', '').replace('_', '')
+                
+                for img in all_images:
+                    img_level2_normalized = img.level_2.lower().replace(' ', '').replace('-', '').replace('series', '').replace('s11', 'series11').replace('sportband', '')
+                    img_color_normalized = img.color.lower().replace(' ', '').replace('-', '').replace('/', '').replace('_', '')
+                    
+                    # Если цвет содержит "/", пробуем первую часть
+                    if '/' in product.color:
+                        color_first_part = product.color.split('/')[0].lower().replace(' ', '').replace('-', '')
+                        if color_first_part in img_color_normalized or img_color_normalized in color_first_part:
+                            product_color_normalized = img_color_normalized
+                    
+                    level2_match = (img_level2_normalized == product_level2_normalized or 
+                                   product_level2_normalized in img_level2_normalized or 
+                                   img_level2_normalized in product_level2_normalized)
+                    
+                    color_match = (img_color_normalized == product_color_normalized or
+                                  product_color_normalized in img_color_normalized or
+                                  img_color_normalized in product_color_normalized)
+                    
+                    if level2_match and color_match:
+                        product_image = img
+                        break
             
             if product_image and product_image.img_list:
                 images_data = json.loads(product_image.img_list)
@@ -224,6 +253,21 @@ async def get_categories(db: Session = Depends(get_db)):
         Category.level_0.isnot(None)
     ).group_by(Category.level_0).all()
     
+    # Фиксированный порядок категорий
+    category_order = [
+        "Смартфоны",
+        "Планшеты",
+        "Ноутбуки",
+        "Умные часы",
+        "Наушники",
+        "Фены и стайлеры",
+        "Игровые приставки",
+        "Умные колонки",
+        "Умные браслеты",
+        "Аксессуары",
+        "Аксессуары для консолей"
+    ]
+    
     result = []
     for level_0, description, icon in categories:
         # Подсчитать товары в этой категории
@@ -238,8 +282,15 @@ async def get_categories(db: Session = Depends(get_db)):
             "level_0": level_0
         })
     
-    # Сортируем по количеству товаров в убывающем порядке
-    result.sort(key=lambda x: x["product_count"], reverse=True)
+    # Сортируем по фиксированному порядку, затем по количеству товаров для категорий не из списка
+    def sort_key(cat):
+        try:
+            return (category_order.index(cat["level_0"]), 0)
+        except ValueError:
+            # Категории не из списка идут в конец, сортируются по количеству товаров
+            return (len(category_order), -cat["product_count"])
+    
+    result.sort(key=sort_key)
     
     return result
 
@@ -532,6 +583,8 @@ async def get_model_variants(model: str, db: Session = Depends(get_db)):
                     "memory": variant_specs.get('memory', ''),
                     "sim_type": variant_specs.get('sim_type', ''),
                     "ram": variant_specs.get('ram', ''),  # RAM для ноутбуков
+                    "screen_size": variant_specs.get('screen_size', ''),  # Размер экрана
+                    "band_size": variant_specs.get('band_size', ''),  # Размер ремешка
                     
                     # Изображения для этого цвета
                     "images": variant_images,
@@ -570,6 +623,8 @@ async def get_model_variants(model: str, db: Session = Depends(get_db)):
         memory = product.disk if product.disk else specifications.get('disk', specifications.get('memory', ''))
         sim_type = product.sim_config if product.sim_config else specifications.get('sim_config', specifications.get('sim_type', ''))
         ram = specifications.get('ram', '')  # RAM для ноутбуков
+        screen_size = specifications.get('screen_size', '')  # Размер экрана
+        band_size = specifications.get('band_size', '')  # Размер ремешка
         
         variant_data = {
             "sku": product.sku,
@@ -581,11 +636,13 @@ async def get_model_variants(model: str, db: Session = Depends(get_db)):
             "stock": product.stock,
             "is_available": product.is_available,
             
-            # Добавляем спецификации варианта (цвет, память, SIM, RAM)
+            # Добавляем спецификации варианта (цвет, память, SIM, RAM, screen_size, band_size)
             "color": color,
             "memory": memory,
             "sim_type": sim_type,
             "ram": ram,  # RAM для ноутбуков
+            "screen_size": screen_size,  # Размер экрана
+            "band_size": band_size,  # Размер ремешка
             
             # Изображения для этого варианта (один цвет обычно)
             "images": images,
@@ -665,89 +722,47 @@ async def search_products(
     limit: int = 20,
     db: Session = Depends(get_db)
 ):
-    """Search products by name, brand, or level_2 - returns unique models only"""
+    """Search products by SKU, name, brand, or level_2 - returns all matching products"""
     search_term = f"%{q}%"
     
-    # Создаем фильтры для поиска
+    # Создаем фильтры для поиска - приоритет поиску по SKU
+    # Сначала ищем точное совпадение по SKU, затем частичное
     search_filters = [
         Product.is_available == True,
         (
+            Product.sku.ilike(search_term) |
             Product.name.ilike(search_term) |
             Product.brand.ilike(search_term) |
             Product.level_2.ilike(search_term)
         )
     ]
     
-    # Используем точно такую же логику как в get_products - получаем уникальные модели
-    subquery = db.query(
-        func.min(Product.id).label('id')
-    ).filter(*search_filters).group_by(Product.level_2, Product.brand).subquery()
-    
-    # Теперь получаем только те товары, которые являются представителями групп
+    # Возвращаем ВСЕ товары, которые подходят под поисковый запрос (без группировки)
+    # Сортируем так, чтобы товары с совпадением по SKU были первыми
     final_query = db.query(Product).filter(
-        Product.id == subquery.c.id
-    ).order_by(Product.level_2.desc(), Product.id)
+        *search_filters
+    ).order_by(
+        Product.sku.ilike(search_term).desc(),  # Точные совпадения по SKU первыми
+        Product.level_2.desc(), 
+        Product.id
+    )
     
     # Применяем лимит
     results = final_query.limit(limit).all()
     
     products = []
     for product in results:
-        # Для карточки модели нужно найти минимальную цену среди всех вариантов этой модели
-        # Получаем все товары этой модели
-        all_model_products = db.query(Product).filter(
-            Product.level_2 == product.level_2,
-            Product.brand == product.brand
-        ).all()
-        
-        # Находим минимальную цену среди всех вариантов
-        min_price = None
-        min_old_price = None
-        currency = "RUB"
-        best_variant_price = None  # Сохраняем весь объект цены для варианта с минимальной ценой
-        
-        for model_product in all_model_products:
-            variant_price = get_price(model_product.sku)
-            if variant_price:
-                variant_price_value = variant_price.get('price', 0.0)
-                if min_price is None or variant_price_value < min_price:
-                    min_price = variant_price_value
-                    best_variant_price = variant_price  # Сохраняем весь объект
-                    currency = variant_price.get('currency', 'RUB')
-        
-        # Если не нашли цену, используем цену представительного товара
-        if min_price is None:
-            price_data = get_price(product.sku)
-            if price_data:
-                price_obj = price_data
-            else:
-                price_obj = {
-                    'price': 0.0,
-                    'old_price': 0.0,
-                    'discount_percentage': 0.0,
-                    'currency': 'RUB'
-                }
+        # Получаем цену для конкретного товара (SKU)
+        price_data = get_price(product.sku)
+        if price_data:
+            price_obj = price_data
         else:
-            # Используем old_price от варианта с минимальной ценой
-            if best_variant_price:
-                min_old_price = best_variant_price.get('old_price')
-                # Если old_price не указан, используем price
-                if not min_old_price:
-                    min_old_price = min_price
-            else:
-                min_old_price = min_price
-            
-            # Формируем объект с минимальной ценой
             price_obj = {
-                'price': min_price,
-                'old_price': min_old_price,
-                'currency': currency
+                'price': 0.0,
+                'old_price': 0.0,
+                'discount_percentage': 0.0,
+                'currency': 'RUB'
             }
-            # Вычисляем discount_percentage
-            if min_old_price and min_old_price > min_price:
-                price_obj['discount_percentage'] = ((min_old_price - min_price) / min_old_price) * 100
-            else:
-                price_obj['discount_percentage'] = 0.0
         
         try:
             specifications = json.loads(product.specifications) if product.specifications else {}
@@ -790,7 +805,7 @@ async def search_products(
             level_2=product.level_2,
             image_url=images[0] if images else '',
             images=images,
-            specifications=specifications,
+            specifications=all_specifications,
             price=price_obj.get('price', 0.0),
             old_price=price_obj.get('old_price', 0.0),
             discount_percentage=price_obj.get('discount_percentage', 0.0),
@@ -1793,6 +1808,8 @@ async def get_product_images_by_color(model_key: str, color: str, db: Session = 
     model_key = urllib.parse.unquote(model_key)
     color = urllib.parse.unquote(color)
     
+    print(f"🔍 Поиск изображений: model_key='{model_key}', color='{color}'")
+    
     # Нормализуем названия для поиска в БД
     # model_key может быть как "iphone17pro", так и "iPhone 17 Pro"
     # Попробуем найти в БД по разным вариантам
@@ -1803,27 +1820,133 @@ async def get_product_images_by_color(model_key: str, color: str, db: Session = 
         ProductImage.color == color
     ).first()
     
-    # Вариант 2: Если не нашли, пробуем нормализованные варианты
+    # Функция для нормализации level_2
+    def normalize_level2(text):
+        if not text:
+            return ""
+        normalized = text.lower().replace(' ', '').replace('-', '').replace('_', '')
+        # Нормализуем варианты Apple Watch: series11 -> s11
+        normalized = normalized.replace('series11', 's11').replace('series', '')
+        normalized = normalized.replace('sportband', '').replace('sport', '')
+        return normalized
+    
+    model_key_normalized = normalize_level2(model_key)
+    
+    # Вариант 2: Попробуем найти через таблицу Product, чтобы получить правильный level_2
     if not product_image:
-        # Попробуем найти похожий level_2 и color (case-insensitive)
+        # Ищем продукты, у которых нормализованный level_2 совпадает с model_key
+        products = db.query(Product).filter(Product.level_2.isnot(None)).all()
+        matching_level2 = None
+        for product in products:
+            if product.level_2:
+                product_level2_normalized = normalize_level2(product.level_2)
+                if product_level2_normalized == model_key_normalized:
+                    matching_level2 = product.level_2
+                    print(f"✅ Найден level_2 в Product: '{matching_level2}' для model_key '{model_key}'")
+                    break
+        
+        # Если нашли level_2, используем его для поиска
+        if matching_level2:
+            product_image = db.query(ProductImage).filter(
+                ProductImage.level_2 == matching_level2,
+                ProductImage.color == color
+            ).first()
+    
+    # Вариант 3: Если не нашли, пробуем нормализованные варианты
+    if not product_image:
+        def normalize_color(text):
+            if not text:
+                return ""
+            normalized = text.lower().replace(' ', '').replace('-', '').replace('/', '').replace('_', '')
+            # Нормализуем Gray/Grey
+            normalized = normalized.replace('grey', 'gray')
+            return normalized
+        
+        def extract_main_color(color_text):
+            """Извлекает основной цвет из составных названий (Space Gray-Black -> Space Gray)"""
+            if not color_text:
+                return ""
+            # Убираем части после дефиса или слэша
+            main = color_text.split('-')[0].split('/')[0].strip()
+            # Нормализуем Gray/Grey
+            main = main.replace('Grey', 'Gray').replace('grey', 'gray')
+            return main
+        
+        # Получаем варианты цвета для поиска
+        color_variants = [color]
+        main_color = extract_main_color(color)
+        if main_color and main_color != color:
+            color_variants.append(main_color)
+        
+        # Добавляем варианты с Gray/Grey
+        if 'gray' in color.lower() or 'grey' in color.lower():
+            color_variants.append(color.replace('Gray', 'Grey').replace('gray', 'grey'))
+            color_variants.append(color.replace('Grey', 'Gray').replace('grey', 'gray'))
+            if main_color:
+                color_variants.append(main_color.replace('Gray', 'Grey').replace('gray', 'grey'))
+                color_variants.append(main_color.replace('Grey', 'Gray').replace('grey', 'gray'))
+        
+        print(f"🎨 Варианты цвета для поиска: {color_variants}")
+        
         all_images = db.query(ProductImage).all()
+        best_match = None
+        best_score = 0
+        
         for img in all_images:
-            # Нормализуем level_2: убираем пробелы и дефисы, приводим к нижнему регистру
-            img_level2_normalized = img.level_2.lower().replace(' ', '').replace('-', '')
-            model_key_normalized = model_key.lower().replace(' ', '').replace('-', '')
+            if not img.level_2 or not img.color:
+                continue
             
-            # Нормализуем color: убираем пробелы и дефисы, приводим к нижнему регистру
-            img_color_normalized = img.color.lower().replace(' ', '').replace('-', '')
-            color_normalized = color.lower().replace(' ', '').replace('-', '')
+            # Нормализуем level_2
+            img_level2_normalized = normalize_level2(img.level_2)
             
-            if (img_level2_normalized == model_key_normalized and
-                img_color_normalized == color_normalized):
-                product_image = img
+            # Проверяем совпадение level_2
+            level2_match = False
+            if img_level2_normalized == model_key_normalized:
+                level2_match = True
+            elif model_key_normalized and img_level2_normalized:
+                # Частичное совпадение для Apple Watch
+                if 'applewatch' in model_key_normalized and 'applewatch' in img_level2_normalized:
+                    # Проверяем совпадение серии (s11)
+                    if 's11' in model_key_normalized and 's11' in img_level2_normalized:
+                        level2_match = True
+            
+            if not level2_match:
+                continue
+            
+            # Проверяем совпадение цвета
+            img_color_normalized = normalize_color(img.color)
+            
+            for color_variant in color_variants:
+                color_variant_normalized = normalize_color(color_variant)
+                
+                # Точное совпадение
+                if img_color_normalized == color_variant_normalized:
+                    product_image = img
+                    print(f"✅ Найдено точное совпадение: level_2='{img.level_2}', color='{img.color}'")
+                    break
+                
+                # Частичное совпадение (Space Gray-Black содержит Space Gray)
+                if color_variant_normalized and img_color_normalized:
+                    if color_variant_normalized in img_color_normalized or img_color_normalized in color_variant_normalized:
+                        # Оцениваем качество совпадения
+                        match_length = min(len(color_variant_normalized), len(img_color_normalized))
+                        if match_length > best_score and match_length >= 5:  # Минимум 5 символов совпадения
+                            best_score = match_length
+                            best_match = img
+                            print(f"📊 Частичное совпадение (score={best_score}): level_2='{img.level_2}', color='{img.color}'")
+            
+            if product_image:
                 break
+        
+        # Если нашли лучшее совпадение, используем его
+        if not product_image and best_match:
+            product_image = best_match
+            print(f"✅ Используем лучшее совпадение: level_2='{product_image.level_2}', color='{product_image.color}'")
     
     # Если нашли в БД - возвращаем из базы
     if product_image and product_image.img_list:
         try:
+            print(f"✅ Найдено изображение в БД: level_2='{product_image.level_2}', color='{product_image.color}'")
             images_data = json.loads(product_image.img_list)
             image_paths = []
             
@@ -1836,19 +1959,23 @@ async def get_product_images_by_color(model_key: str, color: str, db: Session = 
                     # Формат: просто строка с URL
                     image_paths.append(img_data)
             
+            print(f"📸 Возвращаем {len(image_paths)} изображений")
             return {"image_paths": image_paths}
         except (json.JSONDecodeError, KeyError) as e:
             # Если ошибка парсинга, пробуем fallback на файловую систему
             pass
     
     # Fallback: ищем в файловой системе (старая логика)
+    print(f"⚠️ Изображения не найдены в БД, пробуем файловую систему")
     try:
         actual_model_key = normalize_model_key(model_key)
         normalized_color = normalize_color_name(color)
         
         image_folder = f"static/images/products/{actual_model_key}/{normalized_color}"
+        print(f"📁 Проверяем папку: {image_folder}")
         
         if not os.path.exists(image_folder):
+            print(f"❌ Папка не существует: {image_folder}")
             raise HTTPException(
                 status_code=404, 
                 detail=f"Изображения не найдены: model='{model_key}', color='{color}' (поиск в БД и файловой системе)"
@@ -2133,8 +2260,14 @@ async def import_single_product(product_data: dict, db: Session = Depends(get_db
         if isinstance(images_data, list) and images_data:
             # Сохраняем как JSON массив
             images_json = json.dumps(images_data)
+        elif product_data.get('img_list'):
+            # Поддержка старого формата
+            images_json = product_data['img_list'] if isinstance(product_data['img_list'], str) else json.dumps(product_data['img_list'])
         else:
             images_json = None
+        
+        # Ensure categories exist BEFORE creating product
+        ensure_category_exists(db, product_data.get('level0'), product_data.get('level1'), product_data.get('level2'))
         
         # Создаем новый товар
         specs = dict(product_data.get('specifications') or {})
@@ -2160,10 +2293,8 @@ async def import_single_product(product_data: dict, db: Session = Depends(get_db
         )
         
         db.add(new_product)
-        db.commit()
+        db.flush()  # Получаем ID без commit
         db.refresh(new_product)
-        # Ensure categories exist
-        ensure_category_exists(db, product_data.get('level0'), product_data.get('level1'), product_data.get('level2'))
         
         # Добавляем цену, если она указана
         if 'price' in product_data and product_data['price']:
@@ -2176,14 +2307,20 @@ async def import_single_product(product_data: dict, db: Session = Depends(get_db
             )
         
         # Создать запись изображений в ProductImage если есть изображения
-        if images_json and product_data.get('level_2') and product_data.get('color'):
+        # Используем level2 и color из product_data или извлекаем из specifications
+        level2_for_image = product_data.get('level2') or new_product.level_2
+        color_for_image = product_data.get('color') or specs.get('color', '')
+        
+        if images_json and level2_for_image and color_for_image:
             product_image = ProductImage(
-                level_2=product_data['level_2'],
-                color=product_data['color'],
+                level_2=level2_for_image,
+                color=color_for_image,
                 img_list=images_json
             )
             db.add(product_image)
-            db.commit()
+        
+        # Коммитим все изменения вместе
+        db.commit()
         
         return {
             "success": True,
@@ -2480,25 +2617,43 @@ async def update_product(product_id: int, product_data: dict, db: Session = Depe
             product.level_1 = product_data['level_1']
         if 'level_2' in product_data:
             product.level_2 = product_data['level_2']
-        if 'color' in product_data:
-            product.color = product_data['color']
-        if 'disk' in product_data:
-            product.disk = product_data['disk']
-        if 'sim_config' in product_data:
-            product.sim_config = product_data['sim_config']
+        
+        # Обновляем характеристики в specifications JSON (color, disk, sim_config и др.)
+        specs_to_update = ['color', 'disk', 'ram', 'sim_config']
+        if any(key in product_data for key in specs_to_update):
+            try:
+                existing_specs = json.loads(product.specifications) if product.specifications else {}
+            except json.JSONDecodeError:
+                existing_specs = {}
+            
+            for key in specs_to_update:
+                if key in product_data:
+                    existing_specs[key] = product_data[key]
+            
+            product.specifications = json.dumps(existing_specs)
+        
         if 'is_available' in product_data:
             product.is_available = product_data['is_available']
         if 'stock' in product_data:
             product.stock = product_data['stock']
         
         # Обновляем изображения если указаны (в таблице ProductImage)
-        if 'img_list' in product_data and product.level_2 and product.color:
+        # Извлекаем цвет из specifications для поиска изображений
+        product_color = None
+        if product.specifications:
+            try:
+                specs = json.loads(product.specifications) if isinstance(product.specifications, str) else product.specifications
+                product_color = specs.get('color', '')
+            except json.JSONDecodeError:
+                pass
+        
+        if 'img_list' in product_data and product.level_2 and product_color:
             img_list_json = product_data['img_list']
             
             # Ищем или создаем запись в ProductImage
             product_image = db.query(ProductImage).filter(
                 ProductImage.level_2 == product.level_2,
-                ProductImage.color == product.color
+                ProductImage.color == product_color
             ).first()
             
             if product_image:
@@ -2506,7 +2661,7 @@ async def update_product(product_id: int, product_data: dict, db: Session = Depe
             else:
                 product_image = ProductImage(
                     level_2=product.level_2,
-                    color=product.color,
+                    color=product_color,
                     img_list=img_list_json
                 )
                 db.add(product_image)
@@ -2618,10 +2773,28 @@ async def delete_product_by_sku(sku: str, db: Session = Depends(get_db)):
 @app.get("/level2-descriptions/{level_2}")
 async def get_level2_description(level_2: str, db: Session = Depends(get_db)):
     """Get description and specifications for a level_2 product"""
-    # Нормализуем регистр и лишние пробелы, ищем без учета регистра
-    from sqlalchemy import func
-    normalized = (level_2 or "").strip()
-    description = db.query(Level2Description).filter(func.lower(Level2Description.level_2) == normalized.lower()).first()
+    # Декодируем URL и нормализуем
+    from urllib.parse import unquote
+    from sqlalchemy import func, or_
+    
+    # Декодируем URL-кодирование
+    decoded = unquote(level_2)
+    normalized = (decoded or "").strip()
+    
+    # Пробуем найти точное совпадение
+    description = db.query(Level2Description).filter(Level2Description.level_2 == normalized).first()
+    
+    # Если не нашли, пробуем без учета регистра
+    if not description:
+        description = db.query(Level2Description).filter(
+            func.lower(Level2Description.level_2) == normalized.lower()
+        ).first()
+    
+    # Если все еще не нашли, пробуем поиск с LIKE (частичное совпадение)
+    if not description:
+        description = db.query(Level2Description).filter(
+            Level2Description.level_2.ilike(f"%{normalized}%")
+        ).first()
     
     if not description:
         raise HTTPException(status_code=404, detail="Description not found")

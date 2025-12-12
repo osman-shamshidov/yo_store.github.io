@@ -954,10 +954,13 @@ IPHONE17PROMAX   | 129990     | 149990
                                     <option value="Смартфоны">Смартфоны</option>
                                     <option value="Планшеты">Планшеты</option>
                                     <option value="Ноутбуки">Ноутбуки</option>
+                                    <option value="Умные часы">Умные часы</option>
+                                    <option value="Игровые приставки">Игровые приставки</option>
+                                    <option value="Умные колонки">Умные колонки</option>
+                                    <option value="Умные браслеты">Умные браслеты</option>
                                     <option value="Наушники">Наушники</option>
                                     <option value="Аксессуары">Аксессуары</option>
-                                    <option value="Умный дом">Умный дом</option>
-                                    <option value="Игровые приставки">Игровые приставки</option>
+                                    <option value="Аксессуары для консолей">Аксессуары для консолей</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -1034,12 +1037,12 @@ IPHONE17PROMAX   | 129990     | 149990
                 stock: parseInt(document.getElementById('product-stock').value) || 0,
                 is_available: document.getElementById('product-available').checked,
                 sku: document.getElementById('product-sku').value.trim() || `${brand.slice(0,3).toUpperCase()}${Date.now()}`,
-                level_0: level0,
-                level_1: document.getElementById('product-level1').value.trim(),
-                level_2: document.getElementById('product-level2').value.trim(),
-                color: document.getElementById('product-color').value.trim(),
-                disk: document.getElementById('product-disk').value.trim(),
-                sim_config: document.getElementById('product-sim').value.trim()
+                level0: level0,  // Исправлено: level0 вместо level_0
+                level1: document.getElementById('product-level1').value.trim() || null,
+                level2: document.getElementById('product-level2').value.trim() || null,
+                color: document.getElementById('product-color').value.trim() || null,
+                disk: document.getElementById('product-disk').value.trim() || null,
+                sim_config: document.getElementById('product-sim').value.trim() || null
             };
             
             // Обрабатываем характеристики
@@ -1061,8 +1064,8 @@ IPHONE17PROMAX   | 129990     | 149990
                     .filter(url => url && url.startsWith('http'));
                 
                 if (imageUrls.length > 0) {
-                    // Формируем img_list в новом формате
-                    productData.img_list = JSON.stringify(imageUrls.map(url => ({ url: url })));
+                    // Отправляем как массив объектов для API
+                    productData.images = imageUrls.map(url => ({ url: url }));
                 }
             }
             

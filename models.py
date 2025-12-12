@@ -101,7 +101,7 @@ class Category(Base):
     level_1 = Column(String(100))
     level_2 = Column(String(100))
     description = Column(Text)
-    icon = Column(String(50))
+    icon = Column(String(500))  # Увеличено для поддержки URL иконок
 
 class SkuVariant(Base):
     """
